@@ -44,7 +44,7 @@ def main():
     # print("====================================")
     # print("Response from the website:")
     # print(info, "\n")
-    # print(info["items"][0].keys(), "\n")
+    print(info["items"][0].keys(), "\n")
 
     print("\n====================================")
     print("Response from the website (items):")
