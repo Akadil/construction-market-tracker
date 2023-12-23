@@ -24,6 +24,7 @@ API to call is [/v3/trd-buy/bin/050140006873](/v3/trd-buy/bin/050140006873)
   ]
 }
 ```
+
 - Additionally required fields:
   - <b>ref_subject_type_id</b> - Вид предмета закупок
   - <b>customer_bin</b> - БИН Заказчика
@@ -44,3 +45,92 @@ API to call is [/v3/trd-buy/bin/050140006873](/v3/trd-buy/bin/050140006873)
   - 3 - Запрос ценовых предложений
   - 132 - Первый этап конкурса с использованием рамочного соглашения
   - 6 - Из одного источника по несостоявшимся закупкам
+
+> FUCKING SHEEP! <br>
+> It appeared that there are GraphQL functionality enabled!
+> I just have to take my data from there!!! and it's fucking HUGE!
+
+## The GraphQL functionality
+
+> There are just everything, fucking sheep
+
+- <b>POST</b> request to make [/v3/graphql](/v3/graphql)
+  - content-type: application/json
+  - authorization: Bearer {token}
+- It allows to filter out data by values, and dates
+- Also, it has links for tender files
+
+<details>
+<summary><b>TrdBuy</b> (projects)</summary>
+
+```graphql
+type TrdBuy {
+- id: Int # Уникальный идентификатор
+- numberAnno: String # Номер объявления
+- nameRu: String # Наименование на русском языке
+- totalSum: Float # Общая сумма запланированная для закупки (Сумма закупки)
+- customerBin: String # БИН Заказчика
+- customerNameRu: String # Наименование заказчика на русском языке
+- orgBin: String # БИН Организатора
+- orgNameRu: String # Наименование организатора на русском языке
+- startDate: String # Дата начала приема заявок
+- endDate: String # Дата окончания приема заявок
+- publishDate: String # Дата и время публикации
+- itogiDatePublic: String # Дата публикации итогов
+- idSupplier: Int # ID поставщика из одного источника
+- biinSupplier: String # БИН/ИИН поставщика из одного источника
+- isConstructionWork: Int # Закупка с признаком СМР
+- lastUpdateDate: String # Дата последнего изменения
+- finYear: [Int] # Финансовый год
+- kato: [String] # Место поставки (КАТО)
+- Lots: [Lots] # Лоты
+- Organizer: Subject # организатор
+- Files: [FileTrdBuy] # Документ закупки (документы лотов перенесены в объект Lots)
+- RefTradeMethods: RefTradeMethods # Способ закупки
+- RefSubjectType: RefSubjectType # Вид предмета закупки
+- RefBuyStatus: RefBuyStatus # Статус объявления
+- RefTypeTrade: RefTypeTrade # Тип закупки (первая, повторная)
+}
+```
+
+</details>
+
+<details>
+<summary>Lots</summary>
+</details>
+
+<details>
+<summary>FileTrdBuy</summary>
+
+```graphql
+type FileTrdBuy {
+  id: Int # ID
+  filePath: String # Путь до файла
+  originalName: String # Оригинальное имя файла
+  objectId: [Int] # ID объекта
+  nameRu: String # Наименование документа на русском языке
+  nameKz: String # Наименование документа на государственном языке
+  indexDate: String # Дата индексации
+  systemId: Int # Уникальный идентификатор системы
+}
+```
+
+</details>
+
+<details>
+<summary>FileTrdBuy</summary>
+
+```graphql
+type FileLots {
+  id: Int # ID
+  filePath: String # Путь до файла
+  originalName: String # Оригинальное имя файла
+  objectId: Int # ID объекта
+  nameRu: String # Наименование документа на русском языке
+  nameKz: String # Наименование документа на государственном языке
+  indexDate: String # Дата индексации
+  systemId: Int # Уникальный идентификатор системы
+}
+```
+
+</details>
