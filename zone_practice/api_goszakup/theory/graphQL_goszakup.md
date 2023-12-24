@@ -5,6 +5,10 @@
   - authorization: Bearer {token}
 - It allows to filter out data by values, and dates
 - Also, it has links for tender files
+- Necessary links:
+    - [Link](https://ows.goszakup.gov.kz/help/v3/schema/) for GraphQL documentation
+    - [Link](https://goszakup.gov.kz/ru/developer/ows_v3) for API page
+    - [Link](https://habr.com/ru/articles/441438/) for explanation on how the websites GraphQL works
 
 ### Databases: 
 <details>
