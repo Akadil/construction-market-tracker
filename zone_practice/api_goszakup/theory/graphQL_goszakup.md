@@ -206,69 +206,69 @@ type RefTradeMethods {
 ```ts
 query($filter: TrdBuyFiltersInput) {
     TrdBuy(filters: $filter) {
-        id: Int 
-        numberAnno: String 
-        nameRu: String 
-        totalSum: Float
-        refTradeMethodsId: Int
-        orgBin: String 
-        orgNameRu: String 
-        startDate: String 
-        endDate: String 
-        publishDate: String 
-        itogiDatePublic: String 
-        biinSupplier: String 
-        isConstructionWork: Int 
-        finYear: Int 
-        kato: String 
-        Lots: Lots 
+        id
+        numberAnno
+        nameRu
+        totalSum
+        refTradeMethodsId
+        orgBin
+        orgNameRu
+        startDate
+        endDate
+        publishDate
+        itogiDatePublic
+        biinSupplier
+        isConstructionWork
+        finYear
+        kato
+        Lots
         {
-            count: Float 
-            amount: Float 
-            nameRu: String 
-            descriptionRu: String 
-            customerBin: String 
-            customerNameRu: String 
-            isConstructionWork: Int 
-            isDeleted: Int 
-            Customer: Subject
+            count
+            amount
+            nameRu
+            descriptionRu
+            customerBin
+            customerNameRu
+            isConstructionWork
+            isDeleted
+            Customer
             {
-                bin: String 
-                nameRu: String 
-                Address: SubjectAddress
+                bin
+                nameRu
+                Address
                 {
-                    id: Int 
-                    address: String 
-                    katoCode: String 
+                    id
+                    address
+                    katoCode
                 }
             } 
-            Files: FileLots
+            Files
             {
-                filePath: String 
-                originalName: String 
-                nameRu: String 
+                filePath
+                originalName
+                nameRu
             }
         }
-        Files: FileTrdBuy
+        Files
         {
-            filePath: String 
-            originalName: String 
-            nameRu: String 
+            filePath
+            originalName
+            nameRu
         }
-        RefTradeMethods: RefTradeMethods
+        RefTradeMethods
         {
-            nameRu: String
-            code: String
-            isActive: Int
+            nameRu
+            code
+            isActive
         } 
-        RefSubjectType: RefSubjectType
+        RefSubjectType
         {
-            nameRu: String
+            nameRu
         }
-        RefBuyStatus: RefBuyStatus
+        RefBuyStatus
         {
-            nameRu: String
-            code: String
+            nameRu
+            code
         }
     }
 }
