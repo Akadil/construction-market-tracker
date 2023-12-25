@@ -7,16 +7,7 @@ urllib3.disable_warnings()
 
 #/help/v3/schema/
 def getResponse2(url: str, token: str):
-    query = """
-    query($filter: TrdBuyFiltersInput) {
-        TrdBuy(filter: $filter)
-        {
-            id
-            nameRu
-            numberAnno
-        }
-    }
-    """
+
     query = """
         query($filter: TrdBuyFiltersInput, $limit: Int) {
             TrdBuy(filter: $filter, limit: $limit) {
