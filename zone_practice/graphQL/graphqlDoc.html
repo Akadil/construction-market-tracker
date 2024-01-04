@@ -1,0 +1,549 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="./styles/graphdoc.css" />
+    <title>Graphql schema documentation</title>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700" rel="stylesheet"><link type="text/css" rel="stylesheet" href="./assets/code.css" /><link type="text/css" rel="stylesheet" href="./assets/require-by.css" />
+</head>
+<body class="slds-scrollable--y">
+    <nav class="slds-grid slds-grid--vertical slds-col--rule-right">
+        <header class="slds-p-around--medium slds-col slds-shrik slds-grow-none">
+            <button class="slds-button slds-button--icon slds-float--right js-toggle-navigation less-than-medium">
+                <i class="material-icons">close</i>
+            </button>
+                <h3 class="slds-text-heading--medium"><a href="./">GraphQL Schema</a></h3>
+            <div class="slds-p-top--small">
+                <input id="type-search" type="text" placeholder="Search a type" autofocus="" class="slds-input" />
+            </div>
+        </header>
+        <div id="navication-scroll" class="slds-scrollable--y slds-col slds-grow">
+<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+    <h4 class="slds-text-title--caps slds-p-around--medium">Schema</h4>
+    <ul>
+        <li  title="Query">
+            <a href="query.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Query
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+    <h4 class="slds-text-title--caps slds-p-around--medium">Scalars</h4>
+    <ul>
+        <li  title="Boolean">
+            <a href="boolean.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Boolean
+            </a>
+        </li>
+        <li  title="Float">
+            <a href="float.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Float
+            </a>
+        </li>
+        <li  title="ID">
+            <a href="id.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ID
+            </a>
+        </li>
+        <li  title="Int">
+            <a href="int.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Int
+            </a>
+        </li>
+        <li  title="String">
+            <a href="string.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                String
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+    <h4 class="slds-text-title--caps slds-p-around--medium">Enums</h4>
+    <ul>
+        <li  title="__DirectiveLocation">
+            <a href="directivelocation.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __DirectiveLocation
+            </a>
+        </li>
+        <li  title="__TypeKind">
+            <a href="typekind.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __TypeKind
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+    <h4 class="slds-text-title--caps slds-p-around--medium">Objects</h4>
+    <ul>
+        <li  title="Bills">
+            <a href="bills.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Bills
+            </a>
+        </li>
+        <li  title="Contract">
+            <a href="contract.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Contract
+            </a>
+        </li>
+        <li  title="ContractAct">
+            <a href="contractact.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractAct
+            </a>
+        </li>
+        <li  title="ContractActAditSign">
+            <a href="contractactaditsign.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractActAditSign
+            </a>
+        </li>
+        <li  title="ContractActMembers">
+            <a href="contractactmembers.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractActMembers
+            </a>
+        </li>
+        <li  title="ContractActPlace">
+            <a href="contractactplace.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractActPlace
+            </a>
+        </li>
+        <li  title="ContractActSign">
+            <a href="contractactsign.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractActSign
+            </a>
+        </li>
+        <li  title="ContractActSpecSum">
+            <a href="contractactspecsum.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractActSpecSum
+            </a>
+        </li>
+        <li  title="ContractAgreement">
+            <a href="contractagreement.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractAgreement
+            </a>
+        </li>
+        <li  title="ContractKzs">
+            <a href="contractkzs.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractKzs
+            </a>
+        </li>
+        <li  title="ContractPayment">
+            <a href="contractpayment.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractPayment
+            </a>
+        </li>
+        <li  title="ContractSpecSum">
+            <a href="contractspecsum.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractSpecSum
+            </a>
+        </li>
+        <li  title="ContractTreas">
+            <a href="contracttreas.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractTreas
+            </a>
+        </li>
+        <li  title="ContractUnits">
+            <a href="contractunits.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractUnits
+            </a>
+        </li>
+        <li  title="FieldByKeyfounders">
+            <a href="fieldbykeyfounders.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                FieldByKeyfounders
+            </a>
+        </li>
+        <li  title="FieldByKeylots">
+            <a href="fieldbykeylots.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                FieldByKeylots
+            </a>
+        </li>
+        <li  title="FileAct">
+            <a href="fileact.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                FileAct
+            </a>
+        </li>
+        <li  title="FileContract">
+            <a href="filecontract.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                FileContract
+            </a>
+        </li>
+        <li  title="FileLots">
+            <a href="filelots.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                FileLots
+            </a>
+        </li>
+        <li  title="FileTrdBuy">
+            <a href="filetrdbuy.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                FileTrdBuy
+            </a>
+        </li>
+        <li  title="Lots">
+            <a href="lots.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Lots
+            </a>
+        </li>
+        <li  title="News">
+            <a href="news.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                News
+            </a>
+        </li>
+        <li  title="PlnPoint">
+            <a href="plnpoint.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PlnPoint
+            </a>
+        </li>
+        <li  title="PlnPointActs">
+            <a href="plnpointacts.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PlnPointActs
+            </a>
+        </li>
+        <li  title="PlnPointsKato">
+            <a href="plnpointskato.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PlnPointsKato
+            </a>
+        </li>
+        <li  title="PlnPointsSpec">
+            <a href="plnpointsspec.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PlnPointsSpec
+            </a>
+        </li>
+        <li  title="RefAbp">
+            <a href="refabp.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefAbp
+            </a>
+        </li>
+        <li  title="RefAmendmAgreemJustif">
+            <a href="refamendmagreemjustif.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefAmendmAgreemJustif
+            </a>
+        </li>
+        <li  title="RefAmendmentAgreemType">
+            <a href="refamendmentagreemtype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefAmendmentAgreemType
+            </a>
+        </li>
+        <li  title="RefBudgetType">
+            <a href="refbudgettype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefBudgetType
+            </a>
+        </li>
+        <li  title="RefBuyStatus">
+            <a href="refbuystatus.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefBuyStatus
+            </a>
+        </li>
+        <li  title="RefCommRoles">
+            <a href="refcommroles.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefCommRoles
+            </a>
+        </li>
+        <li  title="RefContractAgrForm">
+            <a href="refcontractagrform.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefContractAgrForm
+            </a>
+        </li>
+        <li  title="RefContractCancel">
+            <a href="refcontractcancel.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefContractCancel
+            </a>
+        </li>
+        <li  title="RefContractStatus">
+            <a href="refcontractstatus.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefContractStatus
+            </a>
+        </li>
+        <li  title="RefContractType">
+            <a href="refcontracttype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefContractType
+            </a>
+        </li>
+        <li  title="RefContractYearType">
+            <a href="refcontractyeartype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefContractYearType
+            </a>
+        </li>
+        <li  title="RefCountries">
+            <a href="refcountries.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefCountries
+            </a>
+        </li>
+        <li  title="RefCurrency">
+            <a href="refcurrency.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefCurrency
+            </a>
+        </li>
+        <li  title="RefFinsource">
+            <a href="reffinsource.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefFinsource
+            </a>
+        </li>
+        <li  title="RefJustification">
+            <a href="refjustification.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefJustification
+            </a>
+        </li>
+        <li  title="RefKato">
+            <a href="refkato.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefKato
+            </a>
+        </li>
+        <li  title="RefLotsStatus">
+            <a href="reflotsstatus.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefLotsStatus
+            </a>
+        </li>
+        <li  title="RefMonths">
+            <a href="refmonths.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefMonths
+            </a>
+        </li>
+        <li  title="RefPlnPointStatus">
+            <a href="refplnpointstatus.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefPlnPointStatus
+            </a>
+        </li>
+        <li  title="RefPointType">
+            <a href="refpointtype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefPointType
+            </a>
+        </li>
+        <li  title="RefPoSt">
+            <a href="refpost.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefPoSt
+            </a>
+        </li>
+        <li  title="RefSubjectType">
+            <a href="refsubjecttype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefSubjectType
+            </a>
+        </li>
+        <li  title="RefTradeMethods">
+            <a href="reftrademethods.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefTradeMethods
+            </a>
+        </li>
+        <li  title="RefTypeTrade">
+            <a href="reftypetrade.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefTypeTrade
+            </a>
+        </li>
+        <li  title="RefUnits">
+            <a href="refunits.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RefUnits
+            </a>
+        </li>
+        <li  title="RnuDetailList">
+            <a href="rnudetaillist.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RnuDetailList
+            </a>
+        </li>
+        <li  title="RnuList">
+            <a href="rnulist.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RnuList
+            </a>
+        </li>
+        <li  title="Subject">
+            <a href="subject.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Subject
+            </a>
+        </li>
+        <li  title="SubjectAddress">
+            <a href="subjectaddress.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                SubjectAddress
+            </a>
+        </li>
+        <li  title="SubjectReportAdmins">
+            <a href="subjectreportadmins.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                SubjectReportAdmins
+            </a>
+        </li>
+        <li  title="SubjectUsers">
+            <a href="subjectusers.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                SubjectUsers
+            </a>
+        </li>
+        <li  title="TrdApp">
+            <a href="trdapp.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                TrdApp
+            </a>
+        </li>
+        <li  title="TrdAppLots">
+            <a href="trdapplots.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                TrdAppLots
+            </a>
+        </li>
+        <li  title="TrdBuy">
+            <a href="trdbuy.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                TrdBuy
+            </a>
+        </li>
+        <li  title="TrdBuyCancel">
+            <a href="trdbuycancel.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                TrdBuyCancel
+            </a>
+        </li>
+        <li  title="TrdBuyComm">
+            <a href="trdbuycomm.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                TrdBuyComm
+            </a>
+        </li>
+        <li  title="TrdBuyPause">
+            <a href="trdbuypause.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                TrdBuyPause
+            </a>
+        </li>
+        <li  title="TrdPriceOfferPoint">
+            <a href="trdpriceofferpoint.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                TrdPriceOfferPoint
+            </a>
+        </li>
+        <li  title="TreasuryPay">
+            <a href="treasurypay.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                TreasuryPay
+            </a>
+        </li>
+        <li  title="__Directive">
+            <a href="directive.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __Directive
+            </a>
+        </li>
+        <li  title="__EnumValue">
+            <a href="enumvalue.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __EnumValue
+            </a>
+        </li>
+        <li  title="__Field">
+            <a href="field.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __Field
+            </a>
+        </li>
+        <li  title="__InputValue">
+            <a href="inputvalue.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __InputValue
+            </a>
+        </li>
+        <li  title="__Schema">
+            <a href="schema.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __Schema
+            </a>
+        </li>
+        <li  title="__Type">
+            <a href="type.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __Type
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+    <h4 class="slds-text-title--caps slds-p-around--medium">Input Objects</h4>
+    <ul>
+        <li  title="ContractActFiltersInput">
+            <a href="contractactfiltersinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractActFiltersInput
+            </a>
+        </li>
+        <li  title="ContractFiltersInput">
+            <a href="contractfiltersinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ContractFiltersInput
+            </a>
+        </li>
+        <li  title="LotsFiltersInput">
+            <a href="lotsfiltersinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                LotsFiltersInput
+            </a>
+        </li>
+        <li  title="NewsFiltersInput">
+            <a href="newsfiltersinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                NewsFiltersInput
+            </a>
+        </li>
+        <li  title="PlansFiltersInput">
+            <a href="plansfiltersinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PlansFiltersInput
+            </a>
+        </li>
+        <li  title="RnuFiltersInput">
+            <a href="rnufiltersinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RnuFiltersInput
+            </a>
+        </li>
+        <li  title="SubjectFiltersInput">
+            <a href="subjectfiltersinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                SubjectFiltersInput
+            </a>
+        </li>
+        <li  title="TrdAppFiltersInput">
+            <a href="trdappfiltersinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                TrdAppFiltersInput
+            </a>
+        </li>
+        <li  title="TrdBuyFiltersInput">
+            <a href="trdbuyfiltersinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                TrdBuyFiltersInput
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+    <h4 class="slds-text-title--caps slds-p-around--medium">Directives</h4>
+    <ul>
+        <li  title="deprecated">
+            <a href="deprecated.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                deprecated
+            </a>
+        </li>
+        <li  title="include">
+            <a href="include.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                include
+            </a>
+        </li>
+        <li  title="skip">
+            <a href="skip.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                skip
+            </a>
+        </li>
+    </ul>
+</div>
+        </div>
+    </nav>
+    <main><section class="title slds-theme--inverse">
+    <div class="container slds-grid">
+        <div>
+        <button class="slds-button js-toggle-navigation less-than-medium">
+            <i class="material-icons slds-button__icon slds-button__icon--left">menu</i>
+            <span class="slds-text-title--caps">Types<span>
+        </button>
+        </div>
+        </div>
+    </div>
+    <div class="container">
+        
+        <h1 class="slds-text-heading--large">Graphql schema documentation</h1>
+        <div class="slds-text-body--regular"></div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <h2 id="graphql-schema-definition" class="graphdoc-section__title slds-text-heading--medium slds-m-top--small">
+            <a href="#graphql-schema-definition">
+                <i class="material-icons">link</i>
+            </a>
+            GraphQL Schema definition
+        </h2>
+        <code class="highlight"><ul class="code" style="padding-left:28px"><li><span class="keyword operator ts">schema</span> {</li><li></li><li><span class="tab"><span class="meta">query</span>: <a class="support type" href="query.doc.html">Query</a></span></li><li>}</li></ul></code>
+    </div>
+</section>
+<footer>
+<div class="container slds-p-around--large">
+    <p class="slds-text-align--right slds-text-title--caps">
+        Generated with <a href="https://github.com/2fd/graphdoc#readme" target="_blank">graphdoc 2.4.0</a>
+    </p>
+</div>
+</footer>
+</main>
+    <script src="./scripts/focus-active.js"></script>
+    <script src="./scripts/filter-types.js"></script>
+    <script src="./scripts/toggle-navigation.js"></script>
+</body>: 0
