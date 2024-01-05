@@ -16,7 +16,7 @@ def main():
         3) RefBuyStatus
 
         Results: Almost all data was retrieved (in .md file), except RefBuyStatus.
-
+            
                 But as I understand, only 4xx numbers are bad one and I have to 
                 keep going with the rest numbers
     """
