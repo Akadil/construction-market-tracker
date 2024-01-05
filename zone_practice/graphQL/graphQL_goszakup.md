@@ -20,23 +20,47 @@ type TrdBuy {
     id: Int # Уникальный идентификатор
     numberAnno: String # Номер объявления
     nameRu: String # Наименование на русском языке
+    nameKz: String # Наименование на государственном языке
     totalSum: Float # Общая сумма запланированная для закупки (Сумма закупки)
+    countLots: Int # Количество лотов в объявлении
+    refTradeMethodsId: Int # Код способа закупки
+    refSubjectTypeId: Int # Вид предмета закупок
     customerBin: String # БИН Заказчика
+    customerPid: Int # ИД Заказчика
+    customerNameKz: String # Наименование заказчика на государственном языке
     customerNameRu: String # Наименование заказчика на русском языке
     orgBin: String # БИН Организатора
+    orgPid: Int # ИД Организатора
+    orgNameKz: String # Наименование организатора на государственном языке
     orgNameRu: String # Наименование организатора на русском языке
+    refBuyStatusId: Int # Статуса объявления
     startDate: String # Дата начала приема заявок
+    repeatStartDate: String # Срок начала повторного предоставления (дополнения) заявок
+    repeatEndDate: String # Срок окончания повторного предоставления (дополнения) заявок
     endDate: String # Дата окончания приема заявок
     publishDate: String # Дата и время публикации
     itogiDatePublic: String # Дата публикации итогов
+    refTypeTradeId: Int # Тип закупки (первая, повторная)
+    disablePersonId: Int # Признак - Закупка среди организаций инвалидов
+    discusStartDate: String # Срок начала обсуждения
+    discusEndDate: String # Срок окончания обсуждения
     idSupplier: Int # ID поставщика из одного источника
     biinSupplier: String # БИН/ИИН поставщика из одного источника
+    parentId: Int # ИД исходного объявления
+    singlOrgSign: Int # Закупки Единого организатора КГЗ МФ РК
+    isLightIndustry: Int # Закупка легкой и мебельной промышленности
     isConstructionWork: Int # Закупка с признаком СМР
+    refSpecPurchaseTypeId: Int # Тип специальной закупки
     lastUpdateDate: String # Дата последнего изменения
     finYear: [Int] # Финансовый год
     kato: [String] # Место поставки (КАТО)
+    systemId: Int # ИД системы
+    indexDate: String # Дата индексации
     Lots: [Lots] # Лоты
-    Organizer: Subject # организатор
+    Organizer: Subject # Организатор
+    Commission: [TrdBuyComm] # Конкурсная комиссия
+    Cancel: [TrdBuyCancel] # Информация об отмене закупки
+    Pause: TrdBuyPause # Информация о приостановлении закупки
     Files: [FileTrdBuy] # Документ закупки (документы лотов перенесены в объект Lots)
     RefTradeMethods: RefTradeMethods # Способ закупки
     RefSubjectType: RefSubjectType # Вид предмета закупки
@@ -55,21 +79,41 @@ type Lots {
     id: Int # Идентификатор
     lotNumber: String # Номер лота
     refLotStatusId: Int # Статус лота
+    lastUpdateDate: String # Дата последнего изменения
+    unionLots: Int # Признак объединенного лота
     count: Float # Общее количество
     amount: Float # Общая сумма
     nameRu: String # Наименование на русском языке
+    nameKz: String # Наименование на государственном языке
     descriptionRu: String # Детальное описание на русском языке
+    descriptionKz: String # Детальное описание на государственном языке
     customerId: Int # Идентификатор заказчика
     customerBin: String # БИН заказчика
     customerNameRu: String # Наименование заказчика на русском языке
+    customerNameKz: String # Наименование заказчика на государственном языке
     trdBuyNumberAnno: String # Номер объявления
     trdBuyId: Int # Уникальный идентификатор объявления
     dumping: Int # Признак демпинга
+    refTradeMethodsId: Int # Код планового способа закупки
+    refBuyTradeMethodsId: Int # Код фактического способа закупки
+    psdSign: Int # Признак работы. 1-работа с ТЭО/ПСД, 2-работа на разработку ТЭО/ПСД
+    consultingServices: Int # Признак Консультационная услуга
+    pointList: [Int] # Список пунктов плана
+    enstruList: [Int] # Список ИД ЕНС ТРУ
     plnPointKatoList: [String] # Список мест поставки
+    singlOrgSign: Int # Закупки Единого организатора КГЗ МФ РК
+    isLightIndustry: Int # Закупка легкой и мебельной промышленности
     isConstructionWork: Int # Закупка с признаком СМР
+    disablePersonId: Int # Признак - Закупка среди организаций инвалидов
     isDeleted: Int # Объект удален
+    systemId: Int # Уникальный идентификатор системы
+    indexDate: String # Дата индексации
+    RefLotsStatus: RefLotsStatus # Справочник статусов
     Plans: [PlnPoint] # Пункт плана
     Customer: Subject # Заказчик
+    TrdBuy: TrdBuy # Объявление
+    RefTradeMethods: RefTradeMethods # Плановый способ закупки
+    RefBuyTradeMethods: RefTradeMethods # Фактический способ закупки
     Files: [FileLots] # Документ лота
 }
 ```
@@ -139,6 +183,55 @@ type SubjectAddress {
     address: String # Адрес
     katoCode: String # КАТО
     RefKato: RefKato # КАТО
+}
+```
+</details>
+
+<details>
+<summary>TrdBuyCancel</summary>
+
+```graphQL
+type TrdBuyCancel {
+    id: Int  # Идентификатор
+    numberDecision: String  # Номер решения
+    dateDecision: String  # Дата решения
+    nameAuthority: String  # Наименование органа
+    dateCreate: String  # Дата создания
+    trdBuyId: Int  # Идентификатор объявления
+    actTypeNameRu: String  # Вид акта отмены/приостановления закупки на русском языке
+    actTypeNameKz: String  # Вид акта отмены/приостановления закупки на государственном языке
+    typeActionsNameRu: String  # Решение по отмене на русском языке
+    typeActionsNameKz: String  # Решение по отмене на государственном языке
+    typeActionsCode: String  # Решение по отмене
+    systemId: Int  # ИД системы
+    indexDate: String  # Дата индексации
+}
+```
+</details>
+
+<details>
+<summary>TrdBuyPause</summary>
+
+```graphQL
+type TrdBuyPause {
+    id: Int # Идентификатор объявления
+    status: Int # Статус
+    dateCreate: String # Дата создания
+    datePause: String # Дата приостановления заключения договора
+    decideNumber: String # Номер решения пересмотра или отмены закупок
+    decideDate: String # Дата решения пересмотра или отмены закупок
+    decideDocKz: String # Наименование документа на государственном языке
+    decideDocRu: String # Наименование документа на русском языке
+    statusNameRu: String # Статус на государственном языке
+    statusNameKz: String # Статус на русском языке
+    solutionNameRu: String # На основании чего выбрано решение на государственном языке
+    solutionNameKz: String # На основании чего выбрано решение на русском языке
+    lots: [FieldByKeylots] 
+    {
+        id: Int
+    }
+    systemId: Int # ИД системы
+    indexDate: String # Дата индексации
 }
 ```
 </details>

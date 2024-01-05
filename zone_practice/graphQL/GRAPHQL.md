@@ -29,3 +29,7 @@
 - {"id": 430, "nameRu": "Отменено", "code": "Canceled" },
 - {"id": 440, "nameRu": "На обжаловании", "code": "OnAppellation" },
 - {"id": 540, "nameRu": "Принятие решение об исполнении уведомления", "code": "BeforeReviwePI" }
+
+#### Kato code
+
+- 

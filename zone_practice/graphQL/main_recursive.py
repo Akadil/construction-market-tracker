@@ -13,6 +13,9 @@ def main():
                 the data from it. Plus I need to get all the possibilities of
                 "RefBuyStatus"
         
+        Results:    1. I got all the data from the API (in .md file)
+                    2. Just added "after" parameter to the query to get the 
+                        data recursively
     """
     """ ==================================================================== """
 
@@ -20,24 +23,20 @@ def main():
     envVar = dotenv_values(".env")
     url2 = f'{envVar["API_URL"]}/v3/graphql'
     token = envVar["TOKEN"]
-    
-    # Start the program
-
-    """ ================================================== """
-    """                 Print the data                       """
-    """ ================================================== """
     isContinue = True
     lastId = None
     distinctStatus = dict()
 
+    # Continue till user wants to stop
     while isContinue:
+        # Make an API call
         info = getResponse(url2, token, lastId)
-        data = info["data"]["TrdBuy"]
+        tenders = info["data"]["TrdBuy"]
 
-        for tender in data:
-            # RefBuyStatus
-            if (tender["RefTradeMethods"]["id"] not in distinctStatus):
-                distinctStatus[tender["RefTradeMethods"]["id"]] = tender["RefTradeMethods"]
+        # Get all the distinct statuses
+        for tender in tenders:
+            if (tender["RefBuyStatus"]["id"] not in distinctStatus):
+                distinctStatus[tender["RefBuyStatus"]["id"]] = tender["RefBuyStatus"]
 
         print(json.dumps(distinctStatus, indent=2, ensure_ascii=False))
         print(f'The number of elements: {len(distinctStatus)} - {distinctStatus.keys()}\n\n')
@@ -47,43 +46,27 @@ def main():
             if (isContinue == "n"):
                 isContinue = False
             else:
-                lastId = data[-1]["id"]
+                lastId = tenders[-1]["id"]
                 isContinue = True
         else:
             isContinue = False
-
-    # Print refBuyStatus
 
     # print(json.dumps(data, indent=2, ensure_ascii=False))
 
 def getResponse(url: str, token: str, cursor: str):
 
-    # query = """
-    #     query($filter: TrdBuyFiltersInput, $limit: Int, $after: Int) {
-    #         TrdBuy(filter: $filter, limit: $limit, after: $after) {
-    #             id
-    #             numberAnno
-    #             nameRu
-    #             RefBuyStatus
-    #             {
-    #                 id
-    #                 nameRu
-    #                 code
-    #             }
-    #         }
-    #     } 
-    # """
     query = """
         query($filter: TrdBuyFiltersInput, $limit: Int, $after: Int) {
             TrdBuy(filter: $filter, limit: $limit, after: $after) {
                 id
                 numberAnno
                 nameRu
-                RefTradeMethods
+                RefBuyStatus
                 {
                     id
                     nameRu
-                } 
+                    code
+                }
             }
         } 
     """
