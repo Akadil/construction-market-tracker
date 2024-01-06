@@ -8,19 +8,10 @@ urllib3.disable_warnings()
 def main():
     """ ==================================================================== """
     """ 
-        Goal:   Get the proper data using proper filters from the API 
+        Test:   Test if all tenders that are categorized as 4 in 
+                "isConstructionWork", are "Project development"
 
-        Filters: 
-            - (refTradeMethodsId) - Trading method 
-            - (refSubjectTypeId) - Type of the tender
-            - (refBuyStatusId) - Status of the tender 
-            - (finYear) - Year of the tender 
-            - (orgBin) - BIN of the organizer 
-            
-            - (kato) - KATO code of the tender
-            - (publishDate) - Date of the tender publication
-
-        Results:    All data was retrieved successfully
+        Results:    Yes
     """
     """ ==================================================================== """
     
@@ -29,6 +20,7 @@ def main():
     token = envVar["TOKEN"]
     isContinue = True
     lastId = None
+    disType = dict()
 
     # Continue till user wants to stop
     while isContinue:
@@ -38,8 +30,12 @@ def main():
 
         # Get all the distinct statuses
         for tender in tenders:
-            if (str(tender["isConstructionWork"]) == "4"):
-                print(json.dumps(tender["nameRu"], indent=2, ensure_ascii=False))
+            # if (str(tender["isConstructionWork"]) == "4"):
+            #     print(json.dumps(tender, indent=2, ensure_ascii=False))
+            if (str(tender["isConstructionWork"]) == "2"):
+                print(f"2 {tender['nameRu'][:100]}\n")
+            else:
+                print(f"4 {tender['nameRu'][:100]}\n")
 
         # ask the user if he wants to continue
         if (info["extensions"]["pageInfo"]["hasNextPage"]):
