@@ -39,7 +39,7 @@ def main():
         # Get all the distinct statuses
         for tender in tenders:
             if (str(tender["isConstructionWork"]) == "4"):
-                print(json.dumps(tender["nameRu"], indent=2, ensure_ascii=False))
+                print(json.dumps(tender, indent=2, ensure_ascii=False))
 
         # ask the user if he wants to continue
         if (info["extensions"]["pageInfo"]["hasNextPage"]):
