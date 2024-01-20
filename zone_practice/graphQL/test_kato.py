@@ -25,7 +25,6 @@ def main():
     token = envVar["TOKEN"]
     isContinue = True
     lastId = None
-    distinctStatus = dict()
 
     # Continue till user wants to stop
     while isContinue:
