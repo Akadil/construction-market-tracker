@@ -1,17 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-class ParticipantExperience(models.Model):
-    """
-        This model is used to store the experience of the participant
+class ProjectCharacteristics(models.Model):
 
-        Related to: Participant model
-    """
-
-    class SupplierStatus_choices(models.TextChoices):
-        CHIEFCONTRACTOR = 'CHIEF', 'Генпроектировщик'
-        SUBCONTRACTOR = 'SUB', 'Субподрядчик'
-    
     class ConstructionType_choices(models.TextChoices):
         NEW = 'NEW', 'Новое строительство'
         RECONSTRUCTION = 'REC', 'Реконструкция'
@@ -33,26 +24,7 @@ class ParticipantExperience(models.Model):
         OTHER = 'OTHER', 'Прочие сооружения'
 
     # ==================================================================
-    # Project info
-    number = models.CharField(max_length=20) # Номер
-    Name = models.TextField() # Наименование
-    completion_year = models.IntegerField(
-        validators=[MinValueValidator(1992), MaxValueValidator(2025)], 
-        default=2010
-    ) # Год сдачи
-    address = models.TextField() # Адрес
-    
-    # ==================================================================
-    # Contractor (Winner) info 
-    participant = models.ForeignKey('Participant', on_delete=models.CASCADE) # Поставщик
-    supplier_status = models.CharField(
-        max_length = 5, 
-        choices = SupplierStatus_choices.choices, 
-        default = SupplierStatus_choices.CHIEFCONTRACTOR
-    ) # Статус поставщика
-
-    # ==================================================================
-    # Tender characteristics
+    # General info
     construction_type = models.CharField(
         max_length=3,
         choices=ConstructionType_choices.choices,
@@ -73,20 +45,58 @@ class ParticipantExperience(models.Model):
         choices=FunctionalPurpose_choices.choices,
         default=FunctionalPurpose_choices.CIVIL
     ) # Функциональное назначение
+    
+
+class ParticipantProjects(models.Model):
+    """
+        This model is used to store the experience of the participant
+
+        Related to: Participant model
+    """
+
+    class SupplierStatus_choices(models.TextChoices):
+        CHIEFCONTRACTOR = 'CHIEF', 'Генпроектировщик'
+        SUBCONTRACTOR = 'SUB', 'Субподрядчик'
+    
+    # ==================================================================
+    # Project info
+    number = models.CharField(max_length=20) # Номер
+    name = models.TextField() # Наименование
+    completion_year = models.IntegerField(
+        validators=[MinValueValidator(1992), MaxValueValidator(2025)], 
+        default=2010
+    ) # Год сдачи
+    address = models.TextField() # Адрес
+    
+    # ==================================================================
+    # Contractor (Winner) info 
+    participant = models.ForeignKey('Participant', on_delete=models.CASCADE) # Поставщик
+    supplier_status = models.CharField(
+        max_length = 5, 
+        choices = SupplierStatus_choices.choices, 
+        default = SupplierStatus_choices.CHIEFCONTRACTOR
+    ) # Статус поставщика
+
+    # ==================================================================
+    # Tender characteristics
+    characteristics = models.OneToOneField(
+        ProjectCharacteristics, 
+        on_delete=models.CASCADE
+    ) # Характеристики
 
     def __str__(self):
-        return f"Participant Experience: {self.name} - {self.participant.name}"
+        return f"Participant Projects: {self.name} - {self.participant.name}"
 
     def full_representation(self):
         return f"Project: {self.number} - {self.name}\n" \
                f"Completion Year: {self.completion_year}\n" \
                f"Address: {self.address}\n" \
                f"Participant: {self.participant.name}\n" \
-               f"Supplier Status: {self.get_supplier_status_display()}\n" \
-               f"Construction Type: {self.get_construction_type_display()}\n" \
-               f"Responsibility Level: {self.get_responsibility_level_display()}\n" \
-               f"Technical Complexity: {self.get_technical_complexity_display()}\n" \
-               f"Functional Purpose: {self.get_functional_purpose_display()}\n"
+               f"Supplier Status: {self.get_supplier_status}\n" \
+               f"Construction Type: {self.get_construction_type}\n" \
+               f"Responsibility Level: {self.get_responsibility_level}\n" \
+               f"Technical Complexity: {self.get_technical_complexity}\n" \
+               f"Functional Purpose: {self.get_functional_purpose}\n"
 
 
 class Participant(models.Model):
@@ -281,51 +291,97 @@ class Competition(models.Model):
 
 
 class Address(models.Model):
-    name = models.CharField(max_length=255)  # Адрес
-    katoCode = models.CharField(max_length=255)  # КАТО
-    countryCode = models.IntegerField()  # Код страны
+    """
+        This model is used to store the address of any onject
+    """
+
+    name = models.TextField()  # Адрес
+    katoCode = models.CharField(max_length=10)  # КАТО
+    countryCode = models.CharField(max_length=10)  # Код страны
 
     def __str__(self):
-        return f"[{self.katoCode}] {self.address}"
+        return f"Address: {self.katoCode} - {self.name}"
 
 
 class Subject(models.Model):
-    bin = models.CharField(primary_key=True, max_length=255)  # БИН
+    """
+        This model is used to store the subject of the tender
+    """
+
+    bin = models.CharField(
+        primary_key=True, 
+        max_length=20
+    )  # БИН
     nameRu = models.CharField(max_length=255)  # Наименование на русском языке
     address = models.OneToOneField(Address, on_delete=models.PROTECT)  # Адрес
 
     def __str__(self):
-        return f"[BIN: {self.bin}] {self.nameRu}"
+        return f"Subject: {self.bin} - {self.nameRu}"
 
     
 # @atttention the further tenders will be tracked by their id
 class Tender(models.Model):
-    numberAnno = models.CharField(max_length=255)  # Номер объявления
-    nameRu = models.CharField(max_length=255)  # Наименование на русском языке
-    totalSum = models.FloatField()  # Общая сумма запланированная для закупки (Сумма закупки)
+    """
+        This model is used to store the tenders
+    """
+
+    number_anno = models.CharField(max_length=20)  # Номер объявления
+    name_ru = models.TextField(max_length=255)  # Наименование на русском языке
+    total_sum = models.DecimalField(
+        max_digits=14,
+        decimal_places=2
+    )  # Общая сумма запланированная для закупки (Сумма закупки)
     refBuyStatusId = models.IntegerField() # Статуса объявления
-    startDate = models.CharField(max_length=255)  # Дата начала приема заявок
-    endDate = models.CharField(max_length=255)  # Дата окончания приема заявок
-    biinSupplier = models.CharField(max_length=255)  # БИН/ИИН поставщика из одного источника
-    finYear = models.IntegerField()  # Финансовый год
-    responsibilityLevel = models.IntegerField()  # Уровень ответственности
-    functionalPurpose = models.IntegerField()  # Функциональное назначение
-    technicalComplexity = models.IntegerField()  # Техническая сложность
+    start_date = models.DateTimeField()  # Дата начала приема заявок
+    end_date = models.DateTimeField()  # Дата окончания приема заявок
+    biin_supplier = models.CharField(max_length=20)  # БИН/ИИН поставщика из одного источника
+    fin_year = models.IntegerField(
+        validators=[MinValueValidator(1992), MaxValueValidator(2025)]
+    )  # Финансовый год
 
     def __str__(self):
-        return f"{self.nameRu} (ID: {self.id})"
+        return f"Tender: {self.number_anno} - {self.name_ru}"
+
+    def full_representation(self):
+        return f"Number of Announcement: {self.number_anno}\n" \
+               f"Name (Russian): {self.name_ru}\n" \
+               f"Total Sum: {float(self.total_sum)}\n" \
+               f"Buy Status ID: {self.refBuyStatusId}\n" \
+               f"Start Date: {str(self.start_date)}\n" \
+               f"End Date: {str(self.end_date)}\n" \
+               f"Supplier BIN/IIN: {self.biin_supplier}\n" \
+               f"Financial Year: {self.fin_year}" \
+                f"Lots: {self.lots.all()}\n"
 
 
 class Lots(models.Model):
+    """
+        This model is used to store the lots of the tender
+    """
+
+    # ==================================================================
+    # Model relations
     tender = models.ForeignKey(Tender, on_delete=models.CASCADE)  # Тендер
-    
-    lotNumber = models.CharField(max_length=255)  # Номер лота
-    refLotStatusId = models.IntegerField()  # Статус лота
-    amount = models.FloatField()  # Общая сумма
     participants = models.ManyToManyField(Participant, through="Competition")  # Участники
-    nameRu = models.CharField(max_length=255)  # Наименование на русском языке
+    Customer = models.OneToOneField(Subject, on_delete=models.PROTECT) # Заказчик
+    
+    # ==================================================================
+    # General info
+    number_lot = models.CharField(max_length=255)  # Номер лота
+    refLotStatusId = models.IntegerField()  # Статус лота
+    amount = models.DecimalField(
+        max_digits=14,
+        decimals=2
+    )  # Общая сумма
+    nameRu = models.TextField()  # Наименование на русском языке
     descriptionRu = models.TextField()  # Детальное описание на русском языке
-    Customer = models.OneToOneField(Subject, on_delete=models.PROTECT)  # Заказчик
+
+    # ==================================================================
+    # Tender characteristics
+    characteristics = models.OneToOneField(
+        ProjectCharacteristics, 
+        on_delete=models.CASCADE
+    ) # Характеристики
 
     def getPercentage(self):
         """ 
@@ -338,23 +394,34 @@ class Lots(models.Model):
         return 5
 
     def __str__(self):
-        return f"Lot {self.lotNumber}"
+        return f"Lot: {self.lotNumber} - {self.nameRu}"
+
+    def full_representation(self):
+        return f"Lot ID: {self.id}\n" \
+               f"Number: {self.lotNumber}\n" \
+               f"Status ID: {self.refLotStatusId}\n" \
+               f"Amount: {float(self.amount)}\n" \
+               f"Name (Russian): {self.nameRu}\n" \
+               f"Description (Russian): {self.descriptionRu}\n" \
+               f"Tender: {self.tender}\n" \
+               f"Participants: {', '.join(str(participant) for participant in self.participants.all())}\n" \
+               f"Customer: {self.Customer}"
 
 
-class FileTrdBuy(models.Model):
-    tender = models.ForeignKey(Tender, on_delete=models.CASCADE)  # Тендер
-    filePath = models.CharField(max_length=255)  # Путь до файла
-    originalName = models.CharField(max_length=255)  # Оригинальное имя файла
+# class FileTrdBuy(models.Model):
+#     tender = models.ForeignKey(Tender, on_delete=models.CASCADE)  # Тендер
+#     filePath = models.CharField(max_length=255)  # Путь до файла
+#     originalName = models.CharField(max_length=255)  # Оригинальное имя файла
 
-    def __str__(self):
-        return f"{self.originalName}"
+#     def __str__(self):
+#         return f"{self.originalName} - {self.filePath}"
 
 
-class FileLots(models.Model):
-    lot = models.ForeignKey(Lots, on_delete=models.CASCADE)  # Лот
-    filePath = models.CharField(max_length=255)  # Путь до файла
-    originalName = models.CharField(max_length=255)  # Оригинальное имя файла
+# class FileLots(models.Model):
+#     lot = models.ForeignKey(Lots, on_delete=models.CASCADE)  # Лот
+#     filePath = models.CharField(max_length=255)  # Путь до файла
+#     originalName = models.CharField(max_length=255)  # Оригинальное имя файла
 
-    def __str__(self):
-        return f"{self.originalName}"
+#     def __str__(self):
+#         return f"{self.originalName} - {self.filePath}"
 
