@@ -104,6 +104,7 @@ class OngoingObject(ContructionObject):
         PUBLISHEDPRICEOFFERS = 'PublishedPriceOffers', 'Опубликовано (прием ценовых предложений)'
         BIDREVIEW = 'BidReview', 'Рассмотрение заявок'
         BIDADDITIONALREVIEW = 'BidAdditionalReview', 'Рассмотрение дополнений заявок'
+        COMPLETEWAITING = 'CompleteWaiting', 'Завершено (время на аппеляцию)'
         COMPLETE = 'Complete', 'Завершено'
         REFUSALOFPURCHASE = 'RefusalOfPurchase', 'Отказ от закупки'
         CANCELED = 'Canceled', 'Отменено'
