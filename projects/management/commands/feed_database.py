@@ -129,7 +129,6 @@ class Command(BaseCommand):
 
         # declare the variables
         env_variables = dotenv_values(".env")
-        api_token: str                          # API token
         is_newTenders: bool = True              # Stop condition for new tenders
         is_updateTenders: bool = True           # Stop condition for updated tenders
         next_id = None                          # next id to be used in the API call
@@ -137,7 +136,7 @@ class Command(BaseCommand):
 
         # Define the variables
         if env_variables.keys().__contains__("TOKEN"):
-            api_token = env_variables["TOKEN"]
+            self.token = env_variables["TOKEN"]
         else:
             raise Exception("Error: No TOKEN env variable")
         updateTenders_id = [tender.id_goszakup for tender in updateTenders]
@@ -151,9 +150,12 @@ class Command(BaseCommand):
             response = self.getResponse(next_id)
             if (response.status_code != 200):
                 raise Exception("Error in API call")
+            response = response.json()
+            if "errors" in response.keys():
+                raise Exception("Some undefined errors")
 
             # Get the tenders
-            tenders = info["data"][self.graphql_name]
+            tenders = response["data"][self.graphql_name]
 
             # yield the tenders
             for tender in tenders:
@@ -163,7 +165,7 @@ class Command(BaseCommand):
                     if is_updateTenders == False:
                         break
                     continue
-                if tender["financial_year"] ==  last_id == None:
+                if tender["finYear"] ==  last_id == None:
                     last_id = tender["id"]
 
                 # check if it is a construction work
@@ -194,9 +196,9 @@ class Command(BaseCommand):
     def getResponse(self, cursor: str):
         variables = {
             "filter": {
-                "status": self.status_codes,
-                "subjectType": self.subject_type_id,    
-                "tradeMethod": self.trade_method_id,
+                "refBuyStatusId": self.status_codes,
+                "refSubjectTypeId": self.subject_type_id,    
+                "refTradeMethodsId": self.trade_method_id,
                 "kato": self.kato_codes,
             }
         }
@@ -213,9 +215,9 @@ class Command(BaseCommand):
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.token}",
         }
-        response = requests.post("POST", self.url, json=payload, headers=headers, verify=False)
+        response = requests.request("POST", self.api_url, json=payload, headers=headers, verify=False)
 
-        return response.json()
+        return response
 
 
     def get_last_update(self):
