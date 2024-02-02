@@ -28,6 +28,7 @@ def getResponse2(url: str, token: str):
                 kato
                 Lots
                 {
+                    
                     count
                     amount
                     nameRu
