@@ -1,0 +1,26 @@
+# config.yml
+
+
+REGEX:
+  SPACE: !!str "[\s\S]{0,5}"
+  
+  LEVELS:
+    ONE: !!str "первый%{SPACE}повышенный"
+    TWO: !!str "второй%{SPACE}нормальный"
+    OTHER: !!str "третий%{SPACE}пониженный"
+
+  TECHS: !!str >
+    здания%{SPACE}и%{SPACE}сооружения,%{SPACE}
+    относящиеся%{SPACE}к%{SPACE}технически%{SPACE}
+    сложным%{SPACE}объектам
+
+  TYPES:
+    NEW: !!str "новое%{SPACE}строительство"
+    RECON: !!str "реконструкция"
+    REPAIR: !!str >
+      реставрация%{SPACE}и%{SPACE}капитальный%{SPACE}
+      ремонт%{SPACE}существующих%{SPACE}объектов
+
+  GOALS:
+    LIVING: !!str "объекты%{SPACE}жилищно"
+    OTHER: !!str "прочие%{SPACE}сооружения"
