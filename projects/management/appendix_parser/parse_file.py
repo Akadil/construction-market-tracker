@@ -1,5 +1,5 @@
 from _exceptions import CustomException
-import utils
+from _utils import *
 import os
 
 responseForm = {
@@ -46,7 +46,7 @@ def parseFile(name: str, url: str)-> responseForm:
             response = {
                 "status_code": 200, 
                 "message": "Success",
-                "characteristics": get_technicality(result_text)
+                "characteristics": utils.parse_text(result_text)
             }
 
         except CustomException as ce:               # couldn't extract the text
