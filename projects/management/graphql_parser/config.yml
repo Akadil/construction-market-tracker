@@ -1,0 +1,172 @@
+# config.yml
+
+KATO_ALMATY_CITY:
+  - 751110000 # Алмалинский район
+  - 751210000 # Алатауский район
+  - 751310000 # Ауэзовский район
+  - 751410000 # Бостандыкский район
+  - 751510000 # Жетысуский район
+  - 751710000 # Медеуский район
+  - 751810000 # Наурызбайский район
+  - 751910000 # Турксибский район
+  
+KATO_ALMATY_REGION:
+  - 191000000 # Қонаев Г.А.
+  - 191600000 # Капчагай Г.А.
+  - 192600000 # Текели Г.А.
+  - 193200000 # Аксуский район
+  - 193400000 # Алакольский район
+  - 193600000 # Балхашский район
+  - 194000000 # Енбекшиказахский район
+  - 194200000 # Жамбылский район
+  - 194400000 # Кегенский район
+  - 194600000 # Кербулакский район
+  - 194800000 # Коксуский район
+  - 195000000 # Каратальский район
+  - 195200000 # Карасайский район
+  - 195600000 # Панфиловский район
+  - 195800000 # Райымбекский район
+  - 196000000 # Саркандский район
+  - 196200000 # Талгарский район
+  - 196400000 # Ескельдинский район
+  - 196600000 # Уйгурский район
+  - 196800000 # Илийский район
+
+KATO_ZHETISU_REGION:
+  - 331000000 # Талдыкорган Г.А.
+  - 331800000 # Текели Г.А.
+  - 333200000 # Аксуский район
+  - 333400000 # Алакольский район
+  - 333600000 # Ескельдинский район
+  - 334000000 # Кербулакский район
+  - 334200000 # Коксуский район
+  - 334400000 # Каратальский район
+  - 334600000 # Панфиловский район
+  - 334800000 # Саркандский район
+
+KATO_CODES:
+  - %{KATO_ALMATY_CITY}
+  - %{KATO_ALMATY_REGION}
+  - %{KATO_ZHETISU_REGION}
+
+STATUS_CODES:
+  - 190 # Изменена документация
+  - 210 # Опубликовано
+  - 220 # Опубликовано (прием заявок)
+  - 230 # Опубликовано (дополнение заявок)
+  - 240 # Опубликовано (прием ценовых предложений)
+  - 250 # Рассмотрение заявок
+  - 260 # Рассмотрение дополнений заявок
+  - 349 # Завершено (период обжалования)
+  - 350 # Завершено
+  - 410 # Отказ от закупки"
+  - 430 # Отменено
+  - 440 # На обжаловании
+  - 540 # Принятие решение об исполнении уведомления
+
+STATUS_CODES_UPDATE:
+  - 210 # Опубликовано
+  - 220 # Опубликовано (прием заявок)
+  - 230 # Опубликовано (дополнение заявок)
+  - 240 # Опубликовано (прием ценовых предложений)
+  - 250 # Рассмотрение заявок
+  - 260 # Рассмотрение дополнений заявок
+  - 349 # Завершено (период обжалования)
+  - 440 # На обжаловании
+  - 540 # Принятие решение об исполнении
+
+SUBJECT_TYPE: 2
+TRADE_METHOD_ID: 188
+GRAPHQL_URL: "https://ows.goszakup.gov.kz/v3/graphql"
+GRAPHQL_NAME: "TrdBuy"
+TOKEN: null  # Note: Use 'null' instead of 'None' in YAML
+STATUS_NEED_UPDATE:
+  - "Published"
+  - "PublishedOrderTaking"
+  - "PublishedAdditionDemands"
+  - "PublishedPriceOffers"
+  - "BidReview"
+  - "BidAdditionalReview"
+  - "CompleteWaiting"
+  - "OnAppellation"
+  - "BeforeReviwePI"
+
+QUERY: |
+  query($filter: TrdBuyFiltersInput, $after: Int) {
+      TrdBuy(filter: $filter, after: $after) {
+          id
+          numberAnno
+          nameRu
+          nameKz
+          totalSum
+          refTradeMethodsId
+          orgBin
+          orgNameRu
+          startDate
+          endDate
+          publishDate
+          itogiDatePublic
+          biinSupplier
+          isConstructionWork
+          finYear
+          kato
+          Lots {
+              id
+              lotNumber
+              refLotStatusId
+              count
+              amount
+              nameRu
+              nameKz
+              descriptionRu
+              descriptionKz
+              isConstructionWork
+              Customer {
+                  bin
+                  nameRu
+                  Address {
+                      id
+                      address
+                      katoCode
+                  }
+              }
+              RefLotsStatus {
+                  id
+                  nameRu
+                  nameKz
+                  code
+              }
+              Files {
+                  filePath
+                  originalName
+                  nameRu
+              }
+          }
+          Files {
+              filePath
+              originalName
+              nameRu
+          }
+          RefTradeMethods {
+              id
+              nameRu
+              nameKz
+              code
+              type
+              symbolCode
+              isActive
+              f1
+              ord
+              f2
+          } 
+          RefSubjectType {
+              id
+              nameRu
+          }
+          RefBuyStatus {
+              id
+              nameRu
+              code
+          }
+      }
+  }
