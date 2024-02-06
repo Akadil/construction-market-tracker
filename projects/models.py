@@ -85,10 +85,14 @@ class Tender(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0), MaxValueValidator(100000000000)], # 100 billion
     )
+    org_bin = models.CharField(max_length=12, null=True) # БИН организатора
+    org_name = models.TextField(max_length=100, null=True) # Наименование организатора
 
     status = models.CharField(max_length=100)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
+    publication_date = models.DateTimeField(null=True)
+    fin_year = models.CharField(max_length=4, null=True)
 
 
 class OngoingObject(ContructionObject):

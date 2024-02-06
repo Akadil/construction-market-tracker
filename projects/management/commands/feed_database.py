@@ -1,8 +1,11 @@
 from django.core.management.base import BaseCommand, CommandError
-from projects.models import Tender
+from projects.models import *
+from participants.models import *
 import requests
 from dotenv import dotenv_values
 import urllib3
+import json
+from . import _parseFile
 
 urllib3.disable_warnings()
 
@@ -43,10 +46,15 @@ class Command(BaseCommand):
                 kato
                 Lots
                 {
+                    id
+                    lotNumber
+                    refLotStatusId
                     count
                     amount
                     nameRu
+                    nameKz
                     descriptionRu
+                    descriptionKz
                     isConstructionWork
                     Customer
                     {
@@ -58,7 +66,14 @@ class Command(BaseCommand):
                             address
                             katoCode
                         }
-                    } 
+                    }
+                    RefLotsStatus
+                    {
+                        id
+                        nameRu
+                        nameKz
+                        code
+                    }
                     Files
                     {
                         filePath
@@ -71,6 +86,30 @@ class Command(BaseCommand):
                     filePath
                     originalName
                     nameRu
+                }
+                RefTradeMethods
+                {
+                    id
+                    nameRu
+                    nameKz
+                    code
+                    type
+                    symbolCode
+                    isActive
+                    f1
+                    ord
+                    f2
+                } 
+                RefSubjectType
+                {
+                    id
+                    nameRu
+                }
+                RefBuyStatus
+                {
+                    id
+                    nameRu
+                    code
                 }
             }
         }    
@@ -86,26 +125,47 @@ class Command(BaseCommand):
         last_id, tenders_to_update = self.get_last_update()
 
 
-        # traverse through the tenders
-
         try:
+            # traverse through the tenders
             for tender in self.get_tenders(last_id, tenders_to_update):
-                # Create a new tender
-                # new_tender = Tender(
-                #     id_goszakup=tender['id'],
-                #     tender_number=tender['tenderNumber'],
-                #     name=tender['name'],
-                #     total_sum=tender['amount'],
-                #     status=tender['status'],
-                #     start_date=tender['startDate'],
-                #     end_date=tender['endDate'],
-                # )
-                # new_tender.save()
-                self.stdout.write(
-                    self.style.SUCCESS('Successfully fed the database! "%s"' %tender)
-                )
-                isContinue = input("Let's continue?")
+                if self.check_characteristics(tender) == False:
+                    continue
 
+                # create the tender
+                # print("Creating a new tender")
+                db_tender = Tender(
+                    id_goszakup = tender["id"],
+                    numberAnno = tender["numberAnno"],
+                    name = tender["nameRu"],
+                    totalSum = tender["totalSum"],
+                    status = tender["refTradeMethods"]["nameRu"],
+                    org_bin = tender["orgBin"],
+                    org_name = tender["orgNameRu"],
+                    start_date = tender["startDate"],
+                    end_date = tender["endDate"],
+                    publish_date = tender["publishDate"],
+                    fin_year = tender["finYear"],
+                )
+                db_tender.save()
+                
+                # # Create the lots
+                for lot in tender["Lots"]:
+                    db_lot = OngoingObject(
+                        goszakup_id = lot["id"],
+                        name = lot["nameRu"],
+                        description=lot["descriptionRu"],
+                        address=lot["Customer"]["Address"]["address"],
+                        lot_number = lot["lotNumber"],
+                        tender = db_tender,
+                        amount = lot["amount"],
+                        status = lot["RefLotsStatus"]["nameRu"],
+                    )
+                    db_lot.save()
+
+
+                print(json.dumps(tender, indent=4, ensure_ascii=False))
+
+                isContinue = input("Let's continue?")
 
         except Exception as e:
             raise CommandError(e)
@@ -113,13 +173,72 @@ class Command(BaseCommand):
 
         # ======================================================================
         # Print the results
-        self.stdout.write(
-            self.style.SUCCESS('Successfully fed the database! "%s"' %last_id)
-        )
-        for tender in tenders_to_update:
-            self.stdout.write(
-                self.style.SUCCESS('Successfully fed the database! "%s"' %tender)
-            )
+
+
+    def check_characteristics(self, tender):
+        """
+            This function is used to check the characteristics of the tender
+        """
+
+        tender["level"] = None
+        tender["tech_diff"] = None
+        tender["type"] = None
+        tender["goal"] = None
+
+        # Go through the lots 
+        for lot in tender["Lots"]:
+            
+            lot["level"] = None
+            lot["tech_diff"] = None
+            lot["type"] = None
+            lot["goal"] = None
+
+            # Find the appropriate file
+            appendixFile = None
+            for file in lot["Files"]:
+                if "appendix" in file["originalName"].lower():
+                    appendixFile = file
+                    break
+            
+            if appendixFile == None:
+                continue
+            
+            # Parse the file
+            parsingResult = _parseFile.parseFile(appendixFile["originalName"],
+                                        appendixFile["filePath"])
+            if parsingResult["status_code"] != 200:
+                print(f"{parsingResult['statusCode']}: {parsingResult['message']}")
+                continue
+            
+            lot["level"] = parsingResult["characteristics"]["level"]
+            lot["tech_diff"] = parsingResult["characteristics"]["tech_diff"]
+            lot["type"] = parsingResult["characteristics"]["type"]
+            lot["goal"] = parsingResult["characteristics"]["goal"]
+
+            if tender["level"] is None:
+                tender["level"] = lot["level"]
+            elif tender["level"][0] > lot["level"][0]:
+                    tender["level"] = lot["level"]
+
+            if tender["tech_diff"] is None:
+                tender["tech_diff"] = lot["tech_diff"]
+            elif tender["tech_diff"][0] > lot["tech_diff"][0]:
+                tender["tech_diff"] = lot["tech_diff"]
+            
+            if tender["type"] is None:
+                tender["type"] = lot["type"]
+            elif tender["type"][0] > lot["type"][0]:
+                tender["type"] = lot["type"]
+            
+            if tender["goal"] is None:
+                tender["goal"] = lot["goal"]
+            elif tender["goal"][0] > lot["goal"][0]:
+                tender["goal"] = lot["goal"]
+
+        if tender["goal"] is not None and tender["goal"][0] == 1:
+            return True
+        else:
+            return False
 
 
     def get_tenders(self, last_id: str, updateTenders: list):
@@ -254,3 +373,12 @@ class Command(BaseCommand):
         )
 
         return last_id, tenders_to_update
+
+
+    def print_dict_with_indent(self, input_dict, indent=2):
+        for key, value in input_dict.items():
+            if isinstance(value, dict):
+                print(f"{key}:{' ' * indent}")
+                print_dict_with_indent(value, indent + 2)
+            else:
+                print(f"{key}:{' ' * indent} {value}")
