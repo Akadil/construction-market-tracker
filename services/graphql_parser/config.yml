@@ -1,0 +1,215 @@
+# config.yml
+GRAPHQL_URL: "https://ows.goszakup.gov.kz/v3/graphql"
+GRAPHQL_NAME: "TrdBuy"
+
+QUERY: |
+  query($filter: TrdBuyFiltersInput, $after: Int) {
+      TrdBuy(filter: $filter, after: $after) {
+          id
+          numberAnno
+          nameRu
+          nameKz
+          totalSum
+          refTradeMethodsId
+          orgBin
+          orgNameRu
+          startDate
+          endDate
+          publishDate
+          itogiDatePublic
+          biinSupplier
+          isConstructionWork
+          finYear
+          kato
+          Lots {
+              id
+              lotNumber
+              refLotStatusId
+              count
+              amount
+              nameRu
+              nameKz
+              descriptionRu
+              descriptionKz
+              isConstructionWork
+              Customer
+              {
+                  bin
+                  nameRu
+                  Address {
+                      id
+                      address
+                      katoCode
+                  }
+              }
+              RefLotsStatus
+              {
+                  id
+                  nameRu
+                  code
+              }
+              Files
+              {
+                  filePath
+                  originalName
+                  nameRu
+              }
+          }
+          Files
+          {
+              filePath
+              originalName
+              nameRu
+          }
+          RefTradeMethods
+          {
+              id
+              nameRu
+              code
+              symbolCode
+          }
+          RefSubjectType
+          {
+              id
+              nameRu
+          }
+          RefBuyStatus
+          {
+              id
+              nameRu
+              code
+          }
+      }
+  }
+
+# REGISTRY:
+#   CUSTOMER: "Customer { bin nameRu Address { id address katoCode } }"
+#   # CUSTOMER: |
+#   #     Customer 
+#   #     { 
+#   #         bin 
+#   #         nameRu 
+#   #         Address 
+#   #         { 
+#   #             id 
+#   #             address 
+#   #             katoCode 
+#   #         } 
+#   #     }
+#   REF_TRADE_METHODS: "RefTradeMethods { id nameRu code symbolCode }"
+#   # REF_TRADE_METHODS: |
+#   #     RefTradeMethods 
+#   #     { 
+#   #         id 
+#   #         nameRu 
+#   #         code 
+#   #         symbolCode 
+#   #     }
+#   REF_BUY_STATUS: "RefBuyStatus { id nameRu code }"
+#   # REF_BUY_STATUS: |
+#   #     RefBuyStatus 
+#   #     { 
+#   #         id 
+#   #         nameRu 
+#   #         code 
+#   #     }
+#   REF_LOTS_STATUS: "RefLotsStatus { id nameRu code }"
+#   # REF_LOTS_STATUS: |
+#   #     RefLotsStatus 
+#   #     { 
+#   #         id 
+#   #         nameRu 
+#   #         code 
+#   #     }
+#   REF_SUBJECT_TYPE: "RefSubjectType { id nameRu }"
+#   # REF_SUBJECT_TYPE: |
+#   #     RefSubjectType
+#   #     {
+#   #         id
+#   #         nameRu
+#   #     }
+#   FILES: "Files { filePath originalName nameRu }"
+#   FILES: |
+#       Files
+#       {
+#           filePath
+#           originalName
+#           nameRu
+#       }
+
+
+KATO:
+  ALMATY_REGION:
+    - 191000000 # Қонаев Г.А.
+    - 191600000 # Капчагай Г.А.
+    - 192600000 # Текели Г.А.
+    - 193200000 # Аксуский район
+    - 193400000 # Алакольский район
+    - 193600000 # Балхашский район
+    - 194000000 # Енбекшиказахский район
+    - 194200000 # Жамбылский район
+    - 194400000 # Кегенский район
+    - 194600000 # Кербулакский район
+    - 194800000 # Коксуский район
+    - 195000000 # Каратальский район
+    - 195200000 # Карасайский район
+    - 195600000 # Панфиловский район
+    - 195800000 # Райымбекский район
+    - 196000000 # Саркандский район
+    - 196200000 # Талгарский район
+    - 196400000 # Ескельдинский район
+    - 196600000 # Уйгурский район
+    - 196800000 # Илийский район
+
+  ZHETISU_REGION:
+    - 331000000 # Талдыкорган Г.А.
+    - 331800000 # Текели Г.А.
+    - 333200000 # Аксуский район
+    - 333400000 # Алакольский район
+    - 333600000 # Ескельдинский район
+    - 334000000 # Кербулакский район
+    - 334200000 # Коксуский район
+    - 334400000 # Каратальский район
+    - 334600000 # Панфиловский район
+    - 334800000 # Саркандский район
+
+  ALMATY_CITY:
+    - 751110000 # Алмалинский район
+    - 751210000 # Алатауский район
+    - 751310000 # Ауэзовский район
+    - 751410000 # Бостандыкский район
+    - 751510000 # Жетысуский район
+    - 751710000 # Медеуский район
+    - 751810000 # Наурызбайский район
+    - 751910000 # Турксибский район
+
+
+REF_LOTS_STATUS_VALUES:
+  - {"id": 190, "nameRu": "Изменена документация", "code": "DocumentationСhanged" }
+  - {"id": 210, "nameRu": "Опубликовано", "code": "Published" }
+  - {"id": 220, "nameRu": "Опубликовано (прием заявок) ", "code": "PublishedOrderTaking" }
+  - {"id": 230, "nameRu": "Опубликовано (дополнение заявок)", "code": "PublishedAdditionDemands" }
+  - {"id": 240, "nameRu": "Опубликовано (прием ценовых предложений)", "code": "PublishedPriceOffers" }
+  - {"id": 250, "nameRu": "Рассмотрение заявок", "code": "BidReview" }
+  - {"id": 260, "nameRu": "Рассмотрение дополнений заявок", "code": "BidAdditionalReview" }
+  - {"id": 349, "nameRu": "Завершено (период обжалования)", "code": "CompleteOnHold"}
+  - {"id": 350, "nameRu": "Завершено", "code": "Complete" }
+  - {"id": 410, "nameRu": "Отказ от закупки", "code": "RefusalOfPurchase" }
+  - {"id": 430, "nameRu": "Отменено", "code": "Canceled" }
+  - {"id": 440, "nameRu": "На обжаловании", "code": "OnAppellation" }
+  - {"id": 540, "nameRu": "Принятие решение об исполнении уведомления", "code": "BeforeReviwePI" }
+
+REF_TRADE_METHODS_VALUES: 
+  - {'id': 2, 'nameRu': 'Открытый конкурс'}
+  - {"id": 3, "nameRu": "Запрос ценовых предложений"},
+  - {"id": 6, "nameRu": "Из одного источника по несостоявшимся закупкам"}
+  - {"id": 32, "nameRu": "Конкурс с предварительным квалификационным отбором"},
+  - {"id": 132, "nameRu": "Первый этап конкурса с использованием рамочного соглашения"},
+  - {'id': 188, 'nameRu': 'Конкурс с использованием рейтингово-балльной системы'}
+
+REF_SUBJECT_TYPE_VALUES:
+  - {"id": 1, "nameRu": "Товар"}
+  - {"id": 2, "nameRu": "Работа"}
+  - {"id": 3, "nameRu": "Услуга"}
+
+
