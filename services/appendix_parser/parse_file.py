@@ -5,7 +5,7 @@ import os
 responseForm = {
     "status_code": int,
     "message": str,
-    "characteristics": dict
+    "characteristics": dict | None
 }
 
 def parseFile(name: str, url: str)-> responseForm:

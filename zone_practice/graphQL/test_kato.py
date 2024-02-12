@@ -175,6 +175,7 @@ def getResponse(url: str, token: str, cursor: str):
             "refSubjectTypeId": 2,
             "refTradeMethodsId": 188,
             "finYear": 2023,
+            "totalSum": [200000000],
         }
     }
     if (cursor is not None):
