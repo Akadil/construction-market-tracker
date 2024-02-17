@@ -7,7 +7,7 @@ REGEX:
   LEVELS:
     ONE: !!str "первый%{SPACE}повышенный"
     TWO: !!str "второй%{SPACE}нормальный"
-    OTHER: !!str "третий%{SPACE}пониженный"
+    THREE: !!str "третий%{SPACE}пониженный"
 
   TECHS: !!str >
     здания%{SPACE}и%{SPACE}сооружения,%{SPACE}
@@ -24,3 +24,4 @@ REGEX:
   GOALS:
     LIVING: !!str "объекты%{SPACE}жилищно"
     OTHER: !!str "прочие%{SPACE}сооружения"
+

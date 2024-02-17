@@ -16,22 +16,26 @@ def parse_text(text: str):
     # Get the level of responsibility
     if len(re.findall(regex["LEVELS"]["ONE"], text) > 1):
         characteristics["level"] = (1, "Первый")
-
     elif len(re.findall(regex["LEVELS"]["TWO"], text)) > 1:
         characteristics["level"] = (2, "Второй")
+    elif len(re.findall(regex["LEVELS"]["THREE"], text)) > 1:
+        characteristics["level"] = (3, "Третий")
     else:
-        characteristics["level"] = (3, "другое")
+        characteristics["level"] = (4, "Не распознан")
 
     # Get the technical difficulty
-    if "не" not in re.findall(regex["TECHS"], text)[-1]:
+    techs_regex = re.findall(regex["TECHS"], text)
+    if len(techs_regex) == 0:
+        characteristics["tech_diff"] = (3, "Не распознан")
+    elif "не" not in techs_regex[-1]:
         characteristics["tech_diff"] = (1, "сложный")
     else:
         characteristics["tech_diff"] = (2, "не сложный")
 
+
     # Get the type of the construction
     if len(re.findall(regex["TYPES"]["NEW"], text)) > 1:
         characteristics["type"] = (1, "новое строительство")
-    
     elif len(re.findall(regex["TYPES"]["REPAIR"], text)) > 1:
         characteristics["type"] = (3, "капитальный ремонт")
 
