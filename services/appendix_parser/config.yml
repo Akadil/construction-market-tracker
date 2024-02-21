@@ -1,27 +1,33 @@
 # config.yml
 
-
-REGEX:
-  SPACE: !!str "[\s\S]{0,5}"
+# REGEX:
   
-  LEVELS:
-    ONE: !!str "первый%{SPACE}повышенный"
-    TWO: !!str "второй%{SPACE}нормальный"
-    THREE: !!str "третий%{SPACE}пониженный"
+#   LEVELS:
+#     ONE: !!str "первый%{SPACE}повышенный"
+#     TWO: !!str "второй%{SPACE}нормальный"
+#     THREE: !!str "третий%{SPACE}пониженный"
 
-  TECHS: !!str >
-    здания%{SPACE}и%{SPACE}сооружения,%{SPACE}
-    относящиеся%{SPACE}к%{SPACE}технически%{SPACE}
-    сложным%{SPACE}объектам
+#   TECHS: !!str >
+#     здания%{SPACE}и%{SPACE}сооружения,%{SPACE}
+#     относящиеся%{SPACE}к%{SPACE}технически%{SPACE}
+#     сложным%{SPACE}объектам
 
-  TYPES:
-    NEW: !!str "новое%{SPACE}строительство"
-    RECON: !!str "реконструкция"
-    REPAIR: !!str >
-      реставрация%{SPACE}и%{SPACE}капитальный%{SPACE}
-      ремонт%{SPACE}существующих%{SPACE}объектов
+#   TYPES:
+#     NEW: !!str "новое%{SPACE}строительство"
+#     RECON: !!str "реконструкция"
+#     REPAIR: !!str >
+#       реставрация%{SPACE}и%{SPACE}капитальный%{SPACE}
+#       ремонт%{SPACE}существующих%{SPACE}объектов
 
-  GOALS:
-    LIVING: !!str "объекты%{SPACE}жилищно"
-    OTHER: !!str "прочие%{SPACE}сооружения"
+#   GOALS:
+#     LIVING: !!str "объекты%{SPACE}жилищно"
+#     OTHER: !!str "прочие%{SPACE}сооружения"
 
+
+RETRIEVETEXT:
+  SPACE: "[\\s\\S]{0,5}"
+  TEST:
+    TEST1: "второй[\\s\\S]{0,5}нормальный"
+    TEST2: "новое[\\s\\S]{0,5}строительство"
+    # TEST3: "относящиеся[\\s\\S]{0,5}к[\\s\\S]{0,5}технически"
+    # TEST4: "объекты[\\s\\S]{0,5}жилищно"

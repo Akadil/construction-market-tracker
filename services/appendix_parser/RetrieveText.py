@@ -4,6 +4,8 @@ from pdfminer.pdfdocument import PDFDocument
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
+import yaml
+import re
 
 from io import StringIO
 import logging
@@ -45,6 +47,11 @@ class RetrieveText:
         self.output_string = StringIO()
         self.interpreter = None
 
+        # import the config file
+        with open('services/appendix_parser/config.yml', 'r') as file:
+            self.config = yaml.safe_load(file)
+            self.config = self.config['RETRIEVETEXT']
+
 
     def get_text(self, file_path):
         """
@@ -72,6 +79,10 @@ class RetrieveText:
                 
                 # Remove bad content using the key words
                 text = self.filter_text(text)
+
+                if (self.checkContent(text) == False):
+                    error = "The text is not in the proper format or parsing went wront"
+                    raise Exception(error)
 
         except Exception as e:
             logging.error(f"{str(e)}")  # @todo - log the proper error
@@ -149,7 +160,7 @@ class RetrieveText:
         text = text[position + len(qwe):]
 
         # remove the second part of the beginning of the table
-        qwe = "предложение"
+        qwe = "предложение."
         position = text.find(qwe)
         if (position == -1):
             raise CustomException("The text is not in the proper format")
@@ -166,3 +177,18 @@ class RetrieveText:
 
         logging.debug(f"Filtered text: {text}")
         return text
+
+
+    def checkContent(self, text):
+        """
+            This function checks if the content is in the proper format
+
+            :param text: string
+
+            :return: bool
+        """
+
+        for test, regex in self.config['TEST'].items():
+            if (re.search(regex, text) == None):
+                return False
+        return True
