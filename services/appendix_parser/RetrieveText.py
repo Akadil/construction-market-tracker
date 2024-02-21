@@ -8,12 +8,37 @@ from pdfminer.pdfparser import PDFParser
 from io import StringIO
 import logging
 
-logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s\n%(message)s')
+logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s: %(message)s')
 
-class GetText:
+class RetrieveText:
     """
-        GetText is a class that reads a file and returns its content. The class
-        is done specifically for the appendix_parser service.
+        The class designed to receive a file path and return the specific text 
+        from the file. The class uses pdfminer to extract the text
+
+        Methods:
+            get_text(file_path) -> str: 
+                Main function of a class. It reads a file and returns its 
+                content. The subsequent functions are called from this function
+            
+            get_all_pages(file) -> list(): Extract all pages from the file. This
+                function uses pdfminer to extract pages
+            
+            filter_pages(pages) -> list(): This function filters out the 
+                unneeded pages. It receives a proper list of pages and returns 
+                a filtered list of pages. It focuses only on the proper content
+            
+            filter_text(text) -> str: This function removes everything except 
+                the table content
+
+        Additionally:
+            - Future @todo tasks
+                - Implement a proper logging
+                - Write the tests
+
+            - Current version / compatibility / dependencies
+                - 
+
+        @version    1.0
     """
 
     def __init__(self):
@@ -27,9 +52,12 @@ class GetText:
         """
         text = None
         try:
-            with open(file_path, 'r') as file:
+            with open(file_path, 'rb') as file:
+                logging.info(f"Reading the file: {file_path}")
+
                 # get pages using pdfminer
                 pages = self.get_all_pages(file)
+                logging.info(f"Number of pages: {len(pages)}")
 
                 # filter out the unneeded pages (Kaz and description pages)
                 pages = self.filter_pages(pages)
@@ -62,7 +90,10 @@ class GetText:
         """
         
         # Configure the inner configurations of pdfminer
-        parser = PDFParser(in_file)
+        self.output_string.seek(0)
+        self.output_string.truncate()
+
+        parser = PDFParser(file)
         doc = PDFDocument(parser)
         rsrcmgr = PDFResourceManager()
         device = TextConverter(rsrcmgr, self.output_string, laparams=LAParams())

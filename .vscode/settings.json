@@ -1,16 +1,21 @@
 {
   "editor.formatOnSave": true,
-  "editor.rulers": [80, 120],
+  "editor.rulers": [
+    80,
+    120
+  ],
   "files.exclude": {
-    "**/.git": true,
-    "**/.svn": true,
-    "**/.hg": true,
-    "**/CVS": true,
     "**/.DS_Store": true,
-    ".vscode": true,
-    "**/*.pyc": true
+    "**/.git": true,
+    "**/.hg": true,
+    "**/.svn": true,
+    "**/*.pyc": true,
+    "**/CVS": true
   },
   "workbench.editor.enablePreview": false,
   "editor.minimap.enabled": false,
-  "python.linting.pylintArgs": ["--load-plugins", "pylint_django"]
+  "python.linting.pylintArgs": [
+    "--load-plugins",
+    "pylint_django"
+  ]
 }
