@@ -15,3 +15,6 @@ The appendix parser is dedicated to parse the file from goszakup.gov.kz which re
 
 
 ### usage
+
+status_codes:
+- 401 - problems with requesting the link

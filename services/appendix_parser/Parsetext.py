@@ -40,14 +40,17 @@ class Parsetext:
     config: dict = None     # config file
     errorMsg: str = None    # error message
 
-    def __init__(self):
+    def __init__(self, config = None):
         # Read the config file using yaml
         logger.info("Initiating the class")
 
         try:
-            with open('services/appendix_parser/config.yml', 'r') as file:
-                data = yaml.safe_load(file)
-                self.config = data['PARSETEXT']
+            if (config != None):
+                self.config = config
+            else:
+                with open('services/appendix_parser/config.yml', 'r') as file:
+                    data = yaml.safe_load(file)
+                    self.config = data['PARSETEXT']
 
         except Exception as e:
             logger.error(f"Failed to init: {e}")
@@ -215,9 +218,10 @@ class Parsetext:
                 "data": None,
                 "message": message
             }
-        return {
-            "success": True,
-            "status_code": 200,
-            "data": data,
-            "message": message
-        }
+        else:
+            return {
+                "success": True,
+                "status_code": 200,
+                "data": data,
+                "message": message
+            }

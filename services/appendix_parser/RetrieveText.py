@@ -53,7 +53,7 @@ class RetrieveText:
     config: dict = None     # config file
 
 
-    def __init__(self):
+    def __init__(self, config = None):
         logger.info("Initiating the class")
 
         self.output_string = StringIO()
@@ -61,9 +61,12 @@ class RetrieveText:
 
         # import the config file
         try:
-            with open('services/appendix_parser/config.yml', 'r') as file:
-                data = yaml.safe_load(file)
-                self.config = data['RETRIEVETEXT']
+            if (config != None):
+                self.config = config
+            else:
+                with open('services/appendix_parser/config.yml', 'r') as file:
+                    data = yaml.safe_load(file)
+                    self.config = data['RETRIEVETEXT']
         
         except Exception as e:
             logger.error(f"Failed to init: {e}")

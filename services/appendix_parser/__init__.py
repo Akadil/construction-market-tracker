@@ -1,5 +1,5 @@
-# from .parse_file import parseFile
+from .ParseFile import ParseFile
 from .RetrieveText import RetrieveText
+from .Parsetext import Parsetext
 
-# __all__ = ["parseFile", "RetrieveText"]
-__all__ = ["RetrieveText"]
+__all__ = ["parseFile", "RetrieveText", "Parsetext"]
