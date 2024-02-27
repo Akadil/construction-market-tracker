@@ -1,40 +1,24 @@
-import re
+## Parse text
 
+```
+class Parsetext:
+    def __init__(self)
 
-def extract_text_blocks(text):
-    # Split text into bunches based on double newline characters
-    bunches = text.strip().split('\n\n')
+    def parse(self, text):
+        characteristics: dict
 
-    # Process each bunch
-    blocks = []
-    for bunch in bunches:
-        # Split each bunch into lines
-        lines = bunch.strip().split('\n')
+        characteristics = someFunction(text)
+        return (characteristisc)
+```
 
-        # Remove empty lines and any leading/trailing whitespace from each line
-        lines = [line.strip() for line in lines if line.strip()]
+- Input:      text - The text retrieved from the file
+- Output:     characteristics - Full characteristics of the tender
+- Exception:  If some problems occurs, just throw an exception
 
-        for i in range(len(lines)):
-            # print(f"Character {lines[i][-1]} and the result is {is_minus_sign(lines[i][-1])}")
-            if lines[i][-1] in {'-', '–', '—', '−', '‐', '‒'}:
-                minus_sign = lines[i][-1]
-                if (lines[i][-2] != ' '):
-                    lines[i] = lines[i][:-1] + ' ' + minus_sign
+<details>
+    <summary>Input example</summary>
 
-        # Join the lines to form a single block of text
-        block: str = ' '.join(lines)
-        print(f"<{block}>\n<{block.strip()}>\n\n")
-        # block = block.strip()
-
-        # Append the block to the list of blocks
-        blocks.append(block)
-
-    return blocks
-
-
-def main():
-    # Example usage
-    text = """
+```
 №
 п/п
 
@@ -141,12 +125,16 @@ def main():
 гражданского назначения
 
 
-    """
-    blocks = extract_text_blocks(text)
-    for block in blocks:
-        print("~", block, "~")
-        print('---')
+```
+</details>
 
+---
 
-if __name__ == '__main__':
-    main()
+### Job to do
+
+The previous class will just retrieve the text, it won't analyze. So my job is to check the content of the text, and if everything is ok, then parse it
+
+1. Check for properness of the text
+2. Format the text
+3. Analyze the text
+4. Return the characteristics
