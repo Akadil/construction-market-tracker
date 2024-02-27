@@ -1,3 +1,6 @@
+import logging
+
+
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
 from pdfminer.pdfdocument import PDFDocument
@@ -8,9 +11,11 @@ import yaml
 import re
 
 from io import StringIO
-import logging
 
-logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s: %(message)s')
+# logging.getLogger().setLevel(logging.WARNING)
+# logger.setLevel(logging.DEBUG)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.WARNING)
 
 class RetrieveText:
     """
@@ -34,60 +39,81 @@ class RetrieveText:
 
         Additionally:
             - Future @todo tasks
-                - Implement a proper logging
-                - Write the tests
+                - lots of work. Very dirty code and a lot of exceptions
 
             - Current version / compatibility / dependencies
                 - 
 
-        @version    1.0
+        @version
+            - 2.0 Finished
+            - The test file is test/test_retrieveText.py
+            - 27.02 version
+            - The logs are normal
     """
+    config: dict = None     # config file
+
 
     def __init__(self):
+        logger.info("Initiating the class")
+
         self.output_string = StringIO()
         self.interpreter = None
 
         # import the config file
-        with open('services/appendix_parser/config.yml', 'r') as file:
-            self.config = yaml.safe_load(file)
-            self.config = self.config['RETRIEVETEXT']
+        try:
+            with open('services/appendix_parser/config.yml', 'r') as file:
+                data = yaml.safe_load(file)
+                self.config = data['RETRIEVETEXT']
+        
+        except Exception as e:
+            logger.error(f"Failed to init: {e}")
 
 
-    def get_text(self, file_path):
+    def retrieve(self, file_path):
         """
             Main function of a class. It reads a file and returns its content.
         """
-        text = None
-        try:
-            with open(file_path, 'rb') as file:
-                logging.info(f"Reading the file: {file_path}")
-
-                # get pages using pdfminer
-                pages = self.get_all_pages(file)
-                logging.info(f"Number of pages: {len(pages)}")
-
-                # filter out the unneeded pages (Kaz and description pages)
-                pages = self.filter_pages(pages)
-
-                # extract text from the pages using pdfminer
-                for page in pages:
-                    self.interpreter.process_page(page)
-
-                text = self.output_string.getvalue()
-                if (text == None or text == ""):
-                    raise CustomException("Couldn't get the text ")
-                
-                # Remove bad content using the key words
-                text = self.filter_text(text)
-
-                if (self.checkContent(text) == False):
-                    error = "The text is not in the proper format or parsing went wront"
-                    raise Exception(error)
-
-        except Exception as e:
-            logging.error(f"{str(e)}")  # @todo - log the proper error
+        logger.info(f"Reading the file: {file_path}")
+        
+        # Just a precaution
+        if self.config == None:
+            logger.warning("The config file is not loaded")
             return None
 
+         # Parse the pages
+        try:
+            logger.info(f"Parsing the pages")
+
+            with open(file_path, 'rb') as file:
+                # get pages using pdfminer
+                all_pages = self.get_all_pages(file)
+
+                # filter out the unneeded pages (Kaz and description pages)
+                pages = self.filter_pages(all_pages)
+    
+                for page in pages:
+                    self.interpreter.process_page(page)
+        except Exception as e:
+            logger.error(f"{str(e)}")  # @todo - log the proper error
+            return None
+
+        # extract text from the pages
+        try:
+            logger.info(f"Extracting the text from the pages")
+
+
+            text = self.output_string.getvalue()
+            if (text == None or text == ""):
+                raise Exception("Couldn't get the text ")
+            
+            # Remove bad content using the key words
+            text = self.filter_text(text)
+
+        except Exception as e:
+            logger.error(f"{str(e)}")
+            return None
+
+        logger.info(f"Text extracted successfully \n{text}")
         return text
 
 
@@ -117,10 +143,11 @@ class RetrieveText:
         
         # Check for correctness of the pages
         if (len(pages) == 0):
-            raise CustomException("Couldn't get the pages from the file")
+            raise Exception("Couldn't get the pages from the file")
         elif (len(pages) <= 2):
-            raise CustomException("The number of pages is not enough")
+            raise Exception("The number of pages is not enough")
 
+        
         return pages
 
 
@@ -155,7 +182,7 @@ class RetrieveText:
         qwe = "6. Сведения о наличии опыты работы для расчета критериев, влияющих на конкурсное ценовое"
         position = text.find(qwe)
         if (position == -1):
-            raise CustomException("The text is not in the proper format")
+            raise Exception("Text wrong format. No beginning of the table")
 
         text = text[position + len(qwe):]
 
@@ -163,7 +190,7 @@ class RetrieveText:
         qwe = "предложение."
         position = text.find(qwe)
         if (position == -1):
-            raise CustomException("The text is not in the proper format")
+            raise Exception("Text wrong format. No beginning of the table(2)")
 
         text = text[position + len(qwe):]
 
@@ -171,24 +198,8 @@ class RetrieveText:
         qwe = "Примечание"
         position = text.find(qwe)
         if (position == -1):
-            raise CustomException("The text is not in the proper format")
+            raise Exception("Text wrong format. No end of the table")
 
         text = text[:position]
 
-        logging.debug(f"Filtered text: {text}")
         return text
-
-
-    def checkContent(self, text):
-        """
-            This function checks if the content is in the proper format
-
-            :param text: string
-
-            :return: bool
-        """
-
-        for test, regex in self.config['TEST'].items():
-            if (re.search(regex, text) == None):
-                return False
-        return True

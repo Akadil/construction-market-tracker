@@ -26,8 +26,54 @@
 
 RETRIEVETEXT:
   SPACE: "[\\s\\S]{0,5}"
+
+
+PARSETEXT:
   TEST:
-    TEST1: "второй[\\s\\S]{0,5}нормальный"
-    TEST2: "новое[\\s\\S]{0,5}строительство"
-    # TEST3: "относящиеся[\\s\\S]{0,5}к[\\s\\S]{0,5}технически"
-    # TEST4: "объекты[\\s\\S]{0,5}жилищно"
+    TEST1: {name: Test level existence, test: "второй[\\s\\S]{0,5}нормальный", error: not found}
+    TEST2: {name: Test type existence, test: "новое[\\s\\S]{0,5}строительство", error: not found}
+    TEST3: {name: Test complexity existence, test: "относящиеся[\\s\\S]{0,5}к[\\s\\S]{0,5}технически", error: Technical not found}
+    TEST4: {name: Test goal existence, test: "объекты[\\s\\S]{0,5}жилищно", error: not found}
+
+  CHARACTERISTICS:
+    TECHNICAL_COMPLEXITY:
+      NAME: "technical_complexity"
+      NAME_EN: Technical Complexity
+      NAME_RU: Техническая сложность объектов
+      CATEGORIES:
+        - здания и сооружения, относящиеся к технически сложным объектам
+        - здания и сооружения, не относящиеся к технически сложным объектам
+    
+    FUNCTIONAL_PURPOSE:
+      NAME: "functional_purpose"
+      NAME_EN: Functional purpose
+      NAME_RU: Функциональное назначение
+      CATEGORIES:
+        - промышленные объекты
+        - производственные здания
+        - сооружения
+        - объекты жилищно - гражданского назначения
+        - прочие сооружения
+    
+    RESPONSIBILITY_LEVEL:
+      NAME: "responsibility_level"
+      NAME_EN: Responsibility level
+      NAME_RU: Уровень ответственности зданий и сооружений
+      CATEGORIES:
+        - первый – повышенный
+        - второй – нормальный
+        - третий – пониженный
+
+    TYPE_CONSTRUCTION:
+      NAME: "type_construction"
+      NAME_EN: Type of construction
+      NAME_RU: Вид строительства
+      CATEGORIES:
+        - новое строительство
+        - расширение
+        - техническое перевооружение
+        - модернизация
+        - реконструкция
+        - реставрация и капитальный ремонт существующих объектов
+
+  THRESHOLD: 0.99
