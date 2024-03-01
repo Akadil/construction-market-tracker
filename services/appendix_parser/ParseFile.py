@@ -1,6 +1,11 @@
-from . import Parsetext as pt
-from . import RetrieveText as rt
+from Parsetext import Parsetext
+from RetrieveText import RetrieveText
+from datetime import datetime as dt
 import logging
+import requests
+import yaml
+import os
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -40,8 +45,8 @@ class ParseFile:
     """
 
     config: dict = None     # config file
-    retrievetext: type(rt.RetrieveText)
-    parsetext: type(pt.Parsetext)
+    retrievetext: type(RetrieveText)
+    parsetext: type(Parsetext)
 
     def __init__(self):
         """
@@ -50,15 +55,15 @@ class ParseFile:
         logger.info("Initiating the class")
 
         try :
-            with open('services/appendix_parser/config.yml', 'r') as file:
+            with open('./config.yml', 'r') as file:
                 self.config = yaml.safe_load(file)
 
         except Exception as e:
             logger.error(f"Failed to init: {e}")
             return 
 
-        self.retrievetext = rt.RetrieveText(self.config)
-        self.parsetext = pt.Parsetext(self.config)
+        self.retrievetext = RetrieveText(self.config)
+        self.parsetext = Parsetext(self.config)
 
 
     def parseFile(self, name: str, url: str)-> responseForm: 
@@ -83,22 +88,28 @@ class ParseFile:
                                     characteristics of the object
         """
 
+        logger.info("Starting parsing the file / link")
+
         # Get the file
-        result = get_file(name, url)
+        result = self.get_file(name, url)
+        filename = result["data"]["file_path"]
         if (result["status_code"] != 200):
-            return returner(result["status_code"], result["message"], None)
+            return self.returner(result["status_code"], result["message"], None)
 
         # Extract the text from the pdf
-        result = self.retrievetext.retrieve(pdf_file_path)
+        result = self.retrievetext.retrieve(result["data"]["file_path"])
         if (result == None):
-            return returner(407, "Error: Couldn't extract the text", None)
+            return self.returner(403, "Error: Couldn't extract the text", None)
 
         # Parse the text
         result = self.parsetext.parse(name, result)
         if (result["success"] == False):
-            return returner(402, result["message"], None)
+            return self.returner(404, result["message"], None)
 
-        return returner(200, "Success", result["data"])
+        # delete the file
+        os.remove(filename)
+
+        return self.returner(200, "Success", result["data"])
 
 
     def get_file(self, name: str, url: str):
@@ -108,23 +119,27 @@ class ParseFile:
         """
 
         # make a request to the url
+        logger.info("Downloading the file")
         pdf_request = requests.get(url, verify=False)
         if (pdf_request.status_code != 200):
-            return returner(401, pdf_request.reason, None)
+            return self.returner(401, pdf_request.reason, None)
 
+        
         # Get the file
+        
         try:
-            pdf_file_path = create_file_path(name)
+            pdf_file_path = self.create_file_path(name)
             
             # Create the file and write the content
+            logger.info(f"Writing the file to {pdf_file_path}")
             os.makedirs(os.path.dirname(pdf_file_path), exist_ok=True)
             with open(pdf_file_path, 'wb') as file:
                 file.write(pdf_request.content)
         
         except Exception as e:
-            return returner(407, f"Error: {str(e)}", None)
+            return self.returner(402, f"Error: {str(e)}", None)
 
-        return returner(200, "Success", {"file_path": pdf_file_path})
+        return self.returner(200, "Success", {"file_path": pdf_file_path})
 
 
     def create_file_path(self, name: str):

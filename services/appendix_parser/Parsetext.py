@@ -46,7 +46,7 @@ class Parsetext:
 
         try:
             if (config != None):
-                self.config = config
+                self.config = config['PARSETEXT']
             else:
                 with open('./config.yml', 'r') as file:
                     data = yaml.safe_load(file)

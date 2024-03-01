@@ -14,7 +14,7 @@ from io import StringIO
 # logging.getLogger().setLevel(logging.WARNING)
 # logger.setLevel(logging.DEBUG)
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.WARNING)
 
 class RetrieveText:
     """
@@ -61,7 +61,7 @@ class RetrieveText:
         # import the config file
         try:
             if (config != None):
-                self.config = config
+                self.config = config['RETRIEVETEXT']
             else:
                 with open('./config.yml', 'r') as file:
                     data = yaml.safe_load(file)

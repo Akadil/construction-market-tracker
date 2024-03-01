@@ -1,27 +1,18 @@
 # config.yml
 
-# REGEX:
-  
-#   LEVELS:
-#     ONE: !!str "первый%{SPACE}повышенный"
-#     TWO: !!str "второй%{SPACE}нормальный"
-#     THREE: !!str "третий%{SPACE}пониженный"
+PARSEFILE:
+  TEST:
+    - {name: appendix_5_2022_263784.pdf, url: "https://ows.goszakup.gov.kz/download/trd_buy_lots_list/5698b9ff25b6a581fd4136d6d709ea45"}
+    - {name: appendix_5_2022_10087943.pdf, url: "https://ows.goszakup.gov.kz/download/trd_buy_lots_list/fab16d47fb8e78c78c2229117fdd8ba0"}
+    - {name: appendix_5_2022_10088055.pdf, url: "https://ows.goszakup.gov.kz/download/trd_buy_lots_list/cb651dfcb68cedc631ba752cef8f3345"}
+    - {name: appendix_5_2022_10098851.pdf, url: "https://ows.goszakup.gov.kz/download/trd_buy_lots_list/62da9d34bbf04793647834896c33683c"}
+    - {name: appendix_5_2022_268593.pdf, url: "https://ows.goszakup.gov.kz/download/trd_buy_lots_list/4d3cd9408333ab2c1b06773841d67840"}
+    - {name: appendix_5_2022_10143145.pdf, url: "https://ows.goszakup.gov.kz/download/trd_buy_lots_list/4edf9092801613c9ee6d401fff91d954"}
+    - {name: appendix_5_2022_10211410.pdf, url: "https://ows.goszakup.gov.kz/download/trd_buy_lots_list/d0c6dc7399d45b7fcb769daaab82bfb1"}
+    - {name: appendix_5_2022_10226863.pdf, url: "https://ows.goszakup.gov.kz/download/trd_buy_lots_list/b40f97716797e3af2883f23d2f25638e"}
+    - {name: appendix_5_2022_282953.pdf, url: "https://ows.goszakup.gov.kz/download/trd_buy_lots_list/8584debc05d7b3f0e468e9f6b5cfe6e2"}
 
-#   TECHS: !!str >
-#     здания%{SPACE}и%{SPACE}сооружения,%{SPACE}
-#     относящиеся%{SPACE}к%{SPACE}технически%{SPACE}
-#     сложным%{SPACE}объектам
 
-#   TYPES:
-#     NEW: !!str "новое%{SPACE}строительство"
-#     RECON: !!str "реконструкция"
-#     REPAIR: !!str >
-#       реставрация%{SPACE}и%{SPACE}капитальный%{SPACE}
-#       ремонт%{SPACE}существующих%{SPACE}объектов
-
-#   GOALS:
-#     LIVING: !!str "объекты%{SPACE}жилищно"
-#     OTHER: !!str "прочие%{SPACE}сооружения"
 
 
 RETRIEVETEXT:
