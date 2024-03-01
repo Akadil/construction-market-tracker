@@ -48,7 +48,7 @@ class Parsetext:
             if (config != None):
                 self.config = config
             else:
-                with open('services/appendix_parser/config.yml', 'r') as file:
+                with open('./config.yml', 'r') as file:
                     data = yaml.safe_load(file)
                     self.config = data['PARSETEXT']
 

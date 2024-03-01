@@ -1,6 +1,5 @@
 import logging
 
-
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
 from pdfminer.pdfdocument import PDFDocument
@@ -15,7 +14,7 @@ from io import StringIO
 # logging.getLogger().setLevel(logging.WARNING)
 # logger.setLevel(logging.DEBUG)
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.WARNING)
+logger.setLevel(logging.INFO)
 
 class RetrieveText:
     """
@@ -64,7 +63,7 @@ class RetrieveText:
             if (config != None):
                 self.config = config
             else:
-                with open('services/appendix_parser/config.yml', 'r') as file:
+                with open('./config.yml', 'r') as file:
                     data = yaml.safe_load(file)
                     self.config = data['RETRIEVETEXT']
         
@@ -116,7 +115,8 @@ class RetrieveText:
             logger.error(f"{str(e)}")
             return None
 
-        logger.info(f"Text extracted successfully \n{text}")
+        logger.info(f"Text extracted successfully")
+        logger.debug(f"Text: {text}")
         return text
 
 

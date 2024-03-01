@@ -39,9 +39,9 @@ class ParseFile:
             - Untested
     """
 
-    self.config: dict = None     # config file
-    self.retrievetext: type(rt.RetrieveText)
-    self.parsetext: type(pt.Parsetext)
+    config: dict = None     # config file
+    retrievetext: type(rt.RetrieveText)
+    parsetext: type(pt.Parsetext)
 
     def __init__(self):
         """

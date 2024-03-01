@@ -1,32 +1,30 @@
-# print current working directory
-import sys
-sys.path.append('/mnt/nfs/homes/akalimol/my_git/gss_market')
-
+from RetrieveText import RetrieveText
 import logging
 
-logging.basicConfig(level=logging.WARNING, 
-            format='[%(name)s] - %(levelname)s - %(message)s')
-myPath = "services/appendix_parser/"
+logging.basicConfig(
+    level=logging.INFO, 
+    format='[%(name)s] - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
-from services.appendix_parser.RetrieveText import RetrieveText
 
 def main():
-    print("Testing GetTextFromFile")
+    logger.info("Testing GetTextFromFile")
 
     # Create an instance of the class
     tester = RetrieveText()
 
     # Test the function
     for i in range(1, 10):
-        path = f"{myPath}examples/appendix_{str(i)}.pdf"
+        path = f"./test/examples/appendix_{str(i)}.pdf"
 
         # try:
         text = tester.retrieve(path)
 
-        print(f"File: {path} parsed successfully")
+        logger.info(f"File: {path} parsed successfully")
 
         # write the content of text into a file
-        with open(f"{myPath}/examples/rt_results/appendix_{str(i)}.txt", "w") as file:
+        with open(f"test/results/appendix_{str(i)}.txt", "w") as file:
             file.write(text)
 
         # except Exception as e:
