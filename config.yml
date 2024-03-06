@@ -1,0 +1,24 @@
+RESULTS_PARSER:
+  COMPONENTS: 
+    - {name: bin, regex: "\bБИН\b"}
+    - {name: name, regex: "\bНаименование\b"}
+    - {name: pun, regex: "\bналогов\b"}
+    - {name: experience, regex: "\bОпыт\b"}
+    - {name: address, regex: "\bНахождение\b"}
+    - {name: negative, regex: "\bОтрицательные \b"}
+    - {name: discount, regex: "\bРазмер\b"}
+    - {name: finance, regex: "\bфинансовой\b"}
+    - {name: time, regex: "\bсрок\b"}
+
+
+patterns = {
+        "bin": re.compile(r'\bБИН\b', flags=re.IGNORECASE),
+        "inn": re.compile(r'\bИНН\b', flags=re.IGNORECASE),
+        "name": re.compile(r'\bНаименование\b', flags=re.IGNORECASE),
+        "pun": re.compile(r'\bналогов\b', flags=re.IGNORECASE),
+        "experience": re.compile(r'\bОпыт\b', flags=re.IGNORECASE),
+        "address": re.compile(r'\bНахождение\b', flags=re.IGNORECASE),
+        "negative": re.compile(r'\bОтрицательные \b', flags=re.IGNORECASE),
+        "discount": re.compile(r'\bРазмер\b', flags=re.IGNORECASE),
+        "finance": re.compile(r'\bфинансовой\b', flags=re.IGNORECASE)
+    }
