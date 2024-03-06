@@ -1,4 +1,6 @@
 from . import config, token
+from tender_characteristics import TenderCharacteristics
+from services.appendix_parser import *
 
 def get_tenders():
     """
@@ -30,9 +32,18 @@ def get_tenders():
         # traverse through tenders
         for tender in tenders:
 
-            # Check if the tender is a construction work
-            if (str(tender["isConstructionWork"]) == "4"):
-                yield tender
+            # Remove tenders that are not construction work
+            if (str(tender["isConstructionWork"]) != "4"):
+                continue
+
+            # Check the characteristics of the tender
+            characteristics = TenderCharacteristics(tender)
+            if (characteristics.is_valid() == False):
+                continue
+            else:
+                characteristics.apply()
+
+            yield tender
 
         # Check if there is more data
         if (response["extensions"]["pageInfo"]["hasNextPage"]):
