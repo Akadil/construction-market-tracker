@@ -13,8 +13,6 @@ PARSEFILE:
     - {name: appendix_5_2022_282953.pdf, url: "https://ows.goszakup.gov.kz/download/trd_buy_lots_list/8584debc05d7b3f0e468e9f6b5cfe6e2"}
 
 
-
-
 RETRIEVETEXT:
   SPACE: "[\\s\\S]{0,5}"
 

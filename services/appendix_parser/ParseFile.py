@@ -6,10 +6,8 @@ import requests
 import yaml
 import os
 
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-
 
 responseForm = {
     "status_code": int,
@@ -19,8 +17,9 @@ responseForm = {
 
 class ParseFile:
     """
-        This class is responsible for parsing the text from the pdf file and 
-        returning the characteristics of the object.
+        This class is responsible for getting the link to download, parsing the 
+        text from the dowloaded pdf file and returning the characteristics of 
+        the object.
 
         Methods:
             - __init__:      Initiates the class
@@ -31,17 +30,18 @@ class ParseFile:
         Helpers:
             - self.get_file:    Downloads the file from the given url
 
-            - RetrieveText:     The class designed to receive a file path and
-                                return the specific text from the file. The 
-                                class uses pdfminer to extract the text
+            - RetrieveText:     The class designed to receive a file path in 
+                                directory and return the specific text from the 
+                                file. The class uses pdfminer to extract the 
+                                text
 
             - Parsetext:        This class is responsible for parsing the text.
                                 It receives a string and returns a full 
                                 characteristics of the tender
 
         version:
-            - 0.0.0 First version
-            - Untested
+            - 0.0.1 First version
+            - Tested and working
     """
 
     config: dict = None     # config file
@@ -68,8 +68,7 @@ class ParseFile:
 
     def parseFile(self, name: str, url: str)-> responseForm: 
         """
-            This function downloads a pdf file from the given url, extracts the
-            text from it and returns the characteristics of the object.
+            Main function. Downloads, retrieves and parses the text
 
             Args:
                 - name:     The name of the file
@@ -80,12 +79,6 @@ class ParseFile:
                 - message:          A message describing the status of the 
                                     operation
                 - char:             The characteristics of the object
-            
-            components:
-                - get_file:         Downloads the file from the given url
-                - retrievetext:     Extracts the text from the file
-                - parsetext:        Parses the text and returns the 
-                                    characteristics of the object
         """
 
         logger.info("Starting parsing the file / link")
@@ -120,13 +113,13 @@ class ParseFile:
 
         # make a request to the url
         logger.info("Downloading the file")
+        
         pdf_request = requests.get(url, verify=False)
         if (pdf_request.status_code != 200):
             return self.returner(401, pdf_request.reason, None)
 
         
         # Get the file
-        
         try:
             pdf_file_path = self.create_file_path(name)
             
