@@ -2,6 +2,12 @@ from bs4 import BeautifulSoup
 import logging
 import requests
 import re
+import yaml
+
+try:
+    from market_tracker.settings import API_TOKEN
+except Exception as e:
+    from tests.test_resultParser import API_TOKEN
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -42,37 +48,142 @@ class ResultsParser:
 
         logger.info(f"Starting parsing file in link: {link}")
 
-        # Download the file and get the data
-        data = self.get_data(link)
-        if data["status_code"] != 200:
-            return self.returner(data["status_code"], data["message"], None)
+        """ Get the content """
+        try:
+            fileContent = self.download_file(link)
+            soup = BeautifulSoup(fileContent, 'html.parser')
+
+        except Exception as e:
+            logger.error(f"Error in parsing the content: {e}")
+
+            return self.returner(False, "Couldn't parse the file", None)
+
+
+        """ Retrieve all information about participants """
+        try:
+            # Check the content of the tables
+            tables = soup.find_all('table')
+            participants = self.get_participants(tables)
+            sorted_tables = self.sort_tables(tables)
+
+
+            headers = self.get_headers(table[-2], table[-1])
+            if headers.isSuccess == False:
+                return self.returner(False, "Wrong format of the table", None)
+
+            participants_info = []
+            dict_participants = {}
+            table_experience =  table[-2]
+            table_result = table[-1];
+
+            for row in table_experience.find_all('tr')[4:]:
+                row_data = [td.get_text(strip=True) for td in row.find_all('td')]
+                participant = {
+                    "name": row_data[1],
+                    "b_id": row_data[2],
+                    "experience_level": row_data[3],
+                    "tax_indicator": row_data[4],
+                    "score_location": row_data[9],
+                    "negative_score": row_data[10],
+                    "score": row_data[11],
+                }
+
+                dict_participants[participant["b_id"]] = participant
+                participants_info.append(participant)
+
+
+            for row in table_results.find_all('tr')[2:]:
+                row_data = [td.get_text(strip=True) for td in row.find_all('td')]
+                
+                participant_info = dict_participants[row_data[2]]
+
+                participant_info["bid"] = row_data[4]
+                participant_info["financial_stability"] = row_data[8]
+                participant_info["applied_time"] = row_data[9]
+
+        except Exception as e:
+            logger.error(f"Error in parsing the participants info: {e}")
+            return self.returner(False, "Error in parsing the participants info", None)
+
+        return self.returner(True, "Success", participants_info)
+
+
+    def sort_tables(self, tables):
+        """
+            Gets the tables from the soup
+        """
+
+        logger.info(f"Starting to sort the tables")
+
+        sorted_tables = []
+
+        # Identify the amount of lots in the tender
+        number_of_lots = -1
+
+        for table in tables:
+            if self.config["TABLENAME_LOTS"] in table.caption.text:
+                number_of_lots = len(table.find_all('tr')) - 1
+                break
         
-        data = data["data"]
+        if number_of_lots == -1:
+            raise Exception("Couldn't find the number of lots in the tender")
 
-        # Check the content
-        tables = data.find_all('table')
-        if len(tables) == 0:
-            return self.returner(404, "Wrong content", None)
-
-        # Parse the data
-        result_table = table[-1];
-
-        parcipants_info = []
-        header_table: list = self.get_headers(result_table)
-
-        for row in result_table.find_all('tr')[2:]:
-            row_data = [td.get_text(strip=True) for td in row.find_all('td')]
-            participant_info = {}
-
-            for col_name, value in zip(header_table, row_data):
-                participant_info[col_name] = value
-
-            participants_info.append(participant_info)
-
-        return self.returner(200, "Success", participants_info)
+        
 
 
-    def get_headers(self, table):
+        return sorted_tables
+
+
+    def get_participants(self, tables):
+        """
+            Gets the participants from the tables
+        """
+
+        logger.info(f"Getting the participants of the tender")
+
+        # Get the table with the participants
+        myTable = None
+
+        for table in tables:
+            if self.config["TABLENAME_PARTICIPANTS"] in table.caption.text:
+                myTable = table
+                break
+
+        if myTable == None:
+            raise Exception(f"Couldn't find the table with the participants")
+
+        # Identify the headers of the table
+        col_name = -1
+        col_b_id = -1
+
+        for i, th in enumerate(myTable.find('tr').find_all('th')):
+            if re.search(self.config["COMPONENTS"]["name"]["regex"], th.get_text(strip=True), flags=re.IGNORECASE):
+                col_name = i
+            elif re.search(self.config["COMPONENTS"]["b_id"]["regex"], th.get_text(strip=True), flags=re.IGNORECASE):
+                col_b_id = i
+            
+        if col_name == -1 and col_b_id == -1:
+            raise Exception(f"Couldn't find the headers of the table")
+        
+
+                
+        
+                for row in table.find_all('tr')[1:]:
+                    row_data = [td.get_text(strip=True) for td in row.find_all('td')]
+
+                    participant = {
+                        "name": row_data[0],
+                        "b_id": row_data[1],
+                        "status": row_data[2],
+                        "score": row_data[3]
+                    }
+
+                    participants.append(participant)
+
+        return participants
+
+
+    def get_headers(self, table_experience, table_results):
         """
             Gets the headers of the table
 
@@ -98,35 +209,6 @@ class ResultsParser:
         return headers
 
 
-    def get_data(self, link):
-        """
-            Gets the data from the html file
-
-            Args:
-                - link:     The link to the file
-
-            Returns:
-                - data:     The data from the file
-        """
-
-        # Download the file
-        fileContent = self.download_file(link)
-        if fileContent is None:
-            return self.returner(402, "Error: Couldn't download the file", None)
-
-        # Parse the file (Get the soup)
-        try:
-            soup = BeautifulSoup(fileContent, 'html.parser')
-
-        except Exception as e:
-            logger.error(f"An unexpected error occurred: {e}")
-            logger.debug(f"The file Content is \n{fileContent}")
-
-            return self.returner(403, "Error: Couldn't soupify the content", None)
-
-        return self.returner(200, "Success", soup)
-
-
     def download_file(self, link):
         """
             Downloads the file from the link
@@ -139,27 +221,18 @@ class ResultsParser:
         """
         logger.info(f"Downloading file")
 
-        try: 
-            response = requests.get(link, verify=False)
+        headers = {'Authorization': f'Bearer {API_TOKEN}'}
+        response = requests.get(link, headers=headers, verify=True)
 
-            if response.status_code == 200:
-                logger.info(f"File downloaded successfully")
-            else:
-                logger.error(f"Failed to download the file. {response.status_code}")
-                return None
-
-        except requests.exceptions.RequestException as re:
-            logger.error(f"Failed to download the file: {re}")
-            return None
-
-        except Exception as e:
-            logger.error(f"An unexpected error occurred: {e}")
-            return None
+        if response.status_code == 200:
+            logger.info(f"File downloaded successfully")
+        else:
+            raise Exception(f"Get request failed. Status code {response.status_code}")
 
         return response.content
 
 
-    def returner(self, status_code, message, char):
+    def returner(self, status_code, message, data):
         """
             Returns the result
 
@@ -174,7 +247,7 @@ class ResultsParser:
         """
 
         return {
-            "status_code": status_code,
+            "is_success": status_code,
             "message": message,
-            "data": char
+            "data": data
         }

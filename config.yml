@@ -1,24 +1,46 @@
 RESULTS_PARSER:
-  COMPONENTS: 
-    - {name: bin, regex: "\bБИН\b"}
-    - {name: name, regex: "\bНаименование\b"}
-    - {name: pun, regex: "\bналогов\b"}
-    - {name: experience, regex: "\bОпыт\b"}
-    - {name: address, regex: "\bНахождение\b"}
-    - {name: negative, regex: "\bОтрицательные \b"}
-    - {name: discount, regex: "\bРазмер\b"}
-    - {name: finance, regex: "\bфинансовой\b"}
-    - {name: time, regex: "\bсрок\b"}
+    TABLENAME_LOTS: "Перечень закупаемых товаров, работ, услуг на общую сумму"
+    TABLENAME_PARTICIPANTS: "Информация о представленных заявках на участие в конкурсе (лоте)"
+    TABLENAME_SCORE_CALCULATION: "Информация о результатах применения относительного значения критериев, предусмотренных при равенстве пунктом 243 настоящих Правил, ко всем заявкам на участие в конкурсе, представленным на участие в данном конкурсе"
+    TABLENAME_RESULTS: "Расчет условных цен участников конкурса"
+
+    COMPONENTS:
+    - {name: name, type: full, text: "Наименование потенциального поставщика"}
+    - {name: b_id, type: part, text: "БИН (ИИН)"}
+    - {name: experience_level, type: full, text: "Опыт работы за последние десять лет, предшествующих текущему году"}
+    - {name: tax_score, type: full, text: "Показатель уплаченных налогов"}
+    - {name: address, type: part, text: "Нахождение потенциального поставщика в соответствующей"}
+    - {name: negative_score, type: full, text: "Отрицательные значения за наличие у потенциального поставщика на исполнении договора о государственных закупках"}
+    - {name: score, type: full, text: "Общая условная скидка, %"}
+    - {name: bid, type: full, text: "Показатель финансовой устойчивости"}
 
 
-patterns = {
-        "bin": re.compile(r'\bБИН\b', flags=re.IGNORECASE),
-        "inn": re.compile(r'\bИНН\b', flags=re.IGNORECASE),
-        "name": re.compile(r'\bНаименование\b', flags=re.IGNORECASE),
-        "pun": re.compile(r'\bналогов\b', flags=re.IGNORECASE),
-        "experience": re.compile(r'\bОпыт\b', flags=re.IGNORECASE),
-        "address": re.compile(r'\bНахождение\b', flags=re.IGNORECASE),
-        "negative": re.compile(r'\bОтрицательные \b', flags=re.IGNORECASE),
-        "discount": re.compile(r'\bРазмер\b', flags=re.IGNORECASE),
-        "finance": re.compile(r'\bфинансовой\b', flags=re.IGNORECASE)
-    }
+    TESTS:
+    - { name: "Test 1",
+        tendername: "Строительство наружных сетей водопровода и канализации по адресу: микрорайон Рахат-Мадениет, Алатауского района, города Алматы» для КГУ «Аппарат акима Алатауского района города Алматы",
+        filename: buy_pi_0624_0934_10079496.html, 
+        link: https://ows.goszakup.gov.kz/download/trd_buy/68d5686d543be06d905c9aa4d315856c }
+    - { name: "Test 2",
+        tendername: "Строительство сквера по ул.Ибрагимова в мкр. Алатау» для КГУ «Аппарат акима Медеуского района города Алматы",
+        filename: buy_pi_0620_1200_10087943.html, 
+        link: https://ows.goszakup.gov.kz/download/trd_buy/d65c2ac43fb5e032ad96498fcb9637ff}
+    - { name: "Test 3",
+        tendername: "Реконструкция сквера журналистов» для КГУ «Аппарат акима Медеуского района города Алматы",
+        filename: buy_pi_0620_1200_10088055.html, 
+        link: https://ows.goszakup.gov.kz/download/trd_buy/e1875be88a05cc4b7e186a754b4131c3}
+    - { name: "Test 4",
+        tendername: "Реконструкция здания по улице Рихарда Зорге, дом 2 в Турксибском районе города Алматы» для КГУ «Аппарат акима Турксибского района города Алматы",
+        filename: buy_pi_0614_0934_10098851.html,
+        link: https://ows.goszakup.gov.kz/download/trd_buy/5d3fa6b19ccf2b602f1f233b344053f4}
+    - { name: "Test 5",
+        tendername: "Разработка ПСД «Реконструкция с пристройкой к зданию  РГКП «Государственный академический русский театр для детей и юношества имени Н. Сац», по адресу: мкр. 12, Ауэзовский район, города Алматы» для  КГУ «Управление строительства города Алматы",
+        filename: buy_pi_0627_0933_10131093.html,
+        link: https://ows.goszakup.gov.kz/download/trd_buy/43862c36e065f6c6c8d8e54ab2c1dbe5}
+    - { name: "Test 6",
+        tendername: "Электроснабжение 19 котельных города Алматы» для КГУ «Управление энергетики и водоснабжения города Алматы",
+        filename: buy_pi_0627_0918_10131872.html,
+        link: https://ows.goszakup.gov.kz/download/trd_buy/abe3ca1fde7e571aad477d93561ef49d}
+    - { name: "Test 7",
+        tendername: "Работы по возведению (строительству) нежилых зданий/сооружений",
+        filename: buy_pi_0712_0918_10226863.html,
+        link: https://ows.goszakup.gov.kz/download/trd_buy/79d9ae91ff108bf8536911c92773c7d6}
