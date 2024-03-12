@@ -63,75 +63,124 @@ class ResultsParser:
         try:
             # Check the content of the tables
             tables = soup.find_all('table')
-            participants = self.get_participants(tables)
-            sorted_tables = self.sort_tables(tables)
+            tables = tables[len(tables) / 2 :]  # Remove the kaz version of the tables
+            lots = self.sort_tables(tables)
 
+            for lot in lots:
 
-            headers = self.get_headers(table[-2], table[-1])
-            if headers.isSuccess == False:
-                return self.returner(False, "Wrong format of the table", None)
+                logger.info(f"Starting to parse {lot['lot_number']} lot")
 
-            participants_info = []
-            dict_participants = {}
-            table_experience =  table[-2]
-            table_result = table[-1];
+                lot["participants"] = self.get_participants(lot["table_participants"])
+                dict_participants = self.formulate_participants(lot["participants"])
 
-            for row in table_experience.find_all('tr')[4:]:
-                row_data = [td.get_text(strip=True) for td in row.find_all('td')]
-                participant = {
-                    "name": row_data[1],
-                    "b_id": row_data[2],
-                    "experience_level": row_data[3],
-                    "tax_indicator": row_data[4],
-                    "score_location": row_data[9],
-                    "negative_score": row_data[10],
-                    "score": row_data[11],
-                }
+                headers = self.get_headers(lot["table_score_calculation"], lot["table_results"])
 
-                dict_participants[participant["b_id"]] = participant
-                participants_info.append(participant)
+                # parse the participants info from score calculation table
+                for row in lot["table_score_calculation"].find_all('tr')[4:]:
+                    row_data = row.find_all('td')
+                    participant = dict_participants[row_data[headers["b_id"]].get_text(strip=True)]
 
+                    participant += {
+                        "experience_level": row_data[headers["experience_level"]].get_text(strip=True),
+                        "tax_indicator": row_data[headers["tax_indicator"]].get_text(strip=True),
+                        "score_location": row_data[headers["score_location"]].get_text(strip=True),
+                        "negative_score": row_data[headers["negative_score"]].get_text(strip=True),
+                        "score": row_data[headers["score"]].get_text(strip=True),
+                    }
 
-            for row in table_results.find_all('tr')[2:]:
-                row_data = [td.get_text(strip=True) for td in row.find_all('td')]
-                
-                participant_info = dict_participants[row_data[2]]
+                # parse the participants info from results table
+                for row in lot["table_results"].find_all('tr')[2:]:
+                    row_data = row.find_all('td')
+                    participant = dict_participants[row_data[headers["b_id"]].get_text(strip=True)]
 
-                participant_info["bid"] = row_data[4]
-                participant_info["financial_stability"] = row_data[8]
-                participant_info["applied_time"] = row_data[9]
+                    participant += {
+                        "bid": row_data[headers["bid"]].get_text(strip=True),
+                        "score_bid": row_data[headers["score_bid"]].get_text(strip=True),
+                        "financial_stability": row_data[headers["fin_stability"]].get_text(strip=True),
+                        "applied_time": row_data[headers["applied_time"]].get_text(strip=True)
+                    }
 
         except Exception as e:
             logger.error(f"Error in parsing the participants info: {e}")
             return self.returner(False, "Error in parsing the participants info", None)
 
-        return self.returner(True, "Success", participants_info)
+        return self.returner(True, "Success", lots)
 
 
     def sort_tables(self, tables):
         """
             Gets the tables from the soup
+
+            1. Identify how many lots are there
+            2. Sort the tables by the lots
         """
 
         logger.info(f"Starting to sort the tables")
-
-        sorted_tables = []
-
-        # Identify the amount of lots in the tender
-        number_of_lots = -1
-
-        for table in tables:
-            if self.config["TABLENAME_LOTS"] in table.caption.text:
-                number_of_lots = len(table.find_all('tr')) - 1
-                break
         
-        if number_of_lots == -1:
-            raise Exception("Couldn't find the number of lots in the tender")
+        lot_table = self.get_table(tables, self.config["TABLENAME_LOTS"])
+        tables.remove(lot_table)
 
+
+        """ Identify how many lots are there """
+        lots = []    # list of lot numbers (lot ids)
+        lotNumber = self.config["COLNAME_LOTNUMBER"]  # col. name of the lot number
+        myCol = self.get_column(lot_table.find('tr'), lotNumber)   # column of the lot number
+
+        for lot in lot_table.find_all('tr')[1:]:
+            lots.append(lot.find_all('td')[myCol].get_text(strip=True))
+
+        # I assume that each lot has 3 tables: participants, score calculation and results
+        if (len(lots) * 3 != len(tables)):
+            logger.error(f"The amount of tables is not correct")
+            raise Exception("The amount of tables is not correct")
+
+
+        """ Sort the tables by the lots """
+        sorted_tables = [] # list of dictionaries
         
+        for i, lot in enumerate(lots):
+            size = len(lots)
+            # Take the tables of the current lot. First 3 tables
+            u_tables = tables[size * i : size * (i+1)]  # updated tables
 
+            tn_participant = self.config["TABLENAME_PARTICIPANTS"]  # table name of participants
+            tn_scores = self.config["TABLENAME_SCORE_CALCULATION"]  # table name of score calculation
+            tn_results = self.config["TABLENAME_RESULTS"]  # table name of results
+
+            lot_info = {
+                "lot_number": lot,
+                "table_participants": self.get_table(u_tables, tn_participant),
+                "table_score_calculation": self.get_table(u_tables, tn_scores),
+                "table_results": self.get_table(u_tables, tn_results)
+            }
+
+            sorted_tables.append(lot_info)
 
         return sorted_tables
+
+
+    def get_column(self, tableRow, name, dataType = "td"):
+        """
+            Get the column of the table
+        """
+
+        for i, td in tableRow.find_all('td'):
+            if name in td.get_text(strip=True):
+                return i
+
+        raise Exception(f"Couldn't find the column: {name}")
+
+
+    def get_table(self, tables, name):
+        """
+            Retrieve the table from tables with specific name
+        """
+
+        for table in tables:
+            if name in table.caption.text:
+                return table
+
+        raise Exception(f"Couldn't find the table with name: {name}")
 
 
     def get_participants(self, tables):
@@ -141,70 +190,72 @@ class ResultsParser:
 
         logger.info(f"Getting the participants of the tender")
 
-        # Get the table with the participants
-        myTable = None
+        myTable = self.get_table(tables, self.config["TABLENAME_PARTICIPANTS"])
 
-        for table in tables:
-            if self.config["TABLENAME_PARTICIPANTS"] in table.caption.text:
-                myTable = table
-                break
+        # Identify the headers (columns) of the table
+        # name_name = self.config["COMPONENTS"][0]["text"]    # name of the participant
+        # name_b_id = self.config["COMPONENTS"][1]["text"]    # b_id of the participant
+        name_name = self.config["COMPONENTS"]["name"]    # name of the participant
+        name_b_id = self.config["COMPONENTS"]["b_id"]    # b_id of the participant
+        col_name = self.get_column(myTable.find('tr'), name_name)   # column of the name
+        col_b_id = self.get_column(myTable.find('tr'), name_b_id)   # column of the b_id
 
-        if myTable == None:
-            raise Exception(f"Couldn't find the table with the participants")
+        # Get the participants
+        participants = []
 
-        # Identify the headers of the table
-        col_name = -1
-        col_b_id = -1
-
-        for i, th in enumerate(myTable.find('tr').find_all('th')):
-            if re.search(self.config["COMPONENTS"]["name"]["regex"], th.get_text(strip=True), flags=re.IGNORECASE):
-                col_name = i
-            elif re.search(self.config["COMPONENTS"]["b_id"]["regex"], th.get_text(strip=True), flags=re.IGNORECASE):
-                col_b_id = i
-            
-        if col_name == -1 and col_b_id == -1:
-            raise Exception(f"Couldn't find the headers of the table")
-        
-
-                
-        
-                for row in table.find_all('tr')[1:]:
-                    row_data = [td.get_text(strip=True) for td in row.find_all('td')]
-
-                    participant = {
-                        "name": row_data[0],
-                        "b_id": row_data[1],
-                        "status": row_data[2],
-                        "score": row_data[3]
-                    }
-
-                    participants.append(participant)
+        for row in myTable.find_all('tr')[1:]:
+            participants.append({
+                    "name": row.find_all('td')[col_name].get_text(strip=True),
+                    "b_id": row.find_all('td')[col_b_id].get_text(strip=True)
+                }
+            )
 
         return participants
+
+
+    def formulate_participants(self, participants):
+        """
+            Formulate the participants in a dictionary
+        """
+
+        dict_participants = {}
+
+        for participant in participants:
+            dict_participants[participant["b_id"]] = participant
+
+        return dict_participants
 
 
     def get_headers(self, table_experience, table_results):
         """
             Gets the headers of the table
-
-            Args:
-                - table:    The table to get the headers from
-
-            Returns:
-                - headers:  The headers of the table
         """
 
-        logger.info(f"Getting the headers of the table")
+        name = self.config["COMPONENTS"]["name"]
+        b_id = self.config["COMPONENTS"]["b_id"]
+        experience_level = self.config["COMPONENTS"]["experience_level"]
+        tax_indicator = self.config["COMPONENTS"]["tax_indicator"]
+        score_location = self.config["COMPONENTS"]["score_location"]
+        negative_score = self.config["COMPONENTS"]["negative_score"]
+        score = self.config["COMPONENTS"]["score"]
+        bid = self.config["COMPONENTS"]["bid"]
+        score_bid = self.config["COMPONENTS"]["score_bid"]
+        fin_stability = self.config["COMPONENTS"]["fin_stability"]
+        applied_time = self.config["COMPONENTS"]["applied_time"]
 
-        headers = []
-        columns = self.config["COMPONENTS"]
-
-        for th in table.find('tr').find_all('th'):
-            text = th.get_text(strip=True)
-
-            for column in columns:
-                if re.search(column["regex"], text, flags=re.IGNORECASE):
-                    headers.append(text)
+        headers = {
+            "name": self.get_column(table_experience.find('tr'), name, "th"),
+            "b_id": self.get_column(table_experience.find('tr'), b_id, "th"),
+            "experience_level": self.get_column(table_experience.find_all('tr')[1], experience_level, "th"),
+            "tax_indicator": self.get_column(table_experience.find_all('tr')[1], tax_indicator, "th"),
+            "score_location": self.get_column(table_experience.find_all('tr')[1], score_location, "th"),
+            "negative_score": self.get_column(table_experience.find_all('tr')[1], negative_score, "th"),
+            "score": self.get_column(table_experience.find_all('tr')[1], score, "th"),
+            "bid": self.get_column(table_results.find('tr'), bid, "th"),
+            "score_bid": self.get_column(table_results.find('tr'), score_bid, "th"),
+            "fin_stability": self.get_column(table_results.find('tr'), fin_stability, "th"),
+            "applied_time": self.get_column(table_results.find('tr'), applied_time, "th")
+        }
 
         return headers
 
