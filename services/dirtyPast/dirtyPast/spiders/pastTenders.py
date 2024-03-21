@@ -29,7 +29,11 @@ def compare_strings(string1, string2):
 class PasttendersSpider(scrapy.Spider):
     name = "pastTenders"
     allowed_domains = ["goszakup.gov.kz"]
-    start_urls = ["https://goszakup.gov.kz/ru/eDepository/dataWorkPerformed/subject/91848?&page=1"]
+    # start_urls = ["https://goszakup.gov.kz/ru/eDepository/dataWorkPerformed/subject/91848?&page=1"]
+
+    def __init__(self, start_url):
+        self.start_urls = [start_url]
+
 
     def parse(self, response):
         logger = logging.getLogger(__name__)
