@@ -1,0 +1,12 @@
+MSG:  "Hello, World!"
+
+TEST1: qwe, asd
+TEST2:
+  - "qwe"
+  - 12
+  - true
+TEST3: [qwe, asd, zxc, rty]
+
+TEST_BOOL:
+  BIG_TRUE: True
+  SMALL_TRUE: true
