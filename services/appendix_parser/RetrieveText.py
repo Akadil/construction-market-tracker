@@ -11,8 +11,6 @@ import re
 
 from io import StringIO
 
-# logging.getLogger().setLevel(logging.WARNING)
-# logger.setLevel(logging.DEBUG)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.WARNING)
 
@@ -55,6 +53,7 @@ class RetrieveText:
     def __init__(self, config = None):
         logger.info("Initiating the class")
 
+        # parsing preparations
         self.output_string = StringIO()
         self.interpreter = None
 
@@ -77,11 +76,6 @@ class RetrieveText:
         """
         logger.info(f"Reading the file: {file_path}")
         
-        # Just a precaution
-        if self.config == None:
-            logger.warning("The config file is not loaded")
-            return None
-
          # Parse the pages
         try:
             logger.info(f"Parsing the pages")
@@ -93,16 +87,17 @@ class RetrieveText:
                 # filter out the unneeded pages (Kaz and description pages)
                 pages = self.filter_pages(all_pages)
     
+                # process the pages, make it human readable
                 for page in pages:
                     self.interpreter.process_page(page)
+
         except Exception as e:
             logger.error(f"{str(e)}")  # @todo - log the proper error
             return None
 
-        # extract text from the pages
+        # extract exact text from pages
         try:
             logger.info(f"Extracting the text from the pages")
-
 
             text = self.output_string.getvalue()
             if (text == None or text == ""):

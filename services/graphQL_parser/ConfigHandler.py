@@ -51,6 +51,8 @@ class ConfigHandler:
                 1. Do I have to throw an exception? Depends on future requirements 
         """
 
+        logger.info(f"Getting query {query_name}")
+
         query: str = self.queries.get(query_name) # The query to get the tenders
         if (query == None):
             logger.error(f"Query {query_name} not found in QUERIES")
@@ -84,6 +86,9 @@ class ConfigHandler:
                 Success - returns the extended query
         """
 
+        logger.debug(f"Extending query for {parentObject.get('NAME')}")
+        logger.debug(f"Initial Query: {parentObject.get('QUERY')}")
+
         query = parentObject.get("QUERY") # The query to get the tenders
         restrictions = parentObject.get("RESTRICTIONS")
 
@@ -92,6 +97,8 @@ class ConfigHandler:
 
         while (object_regex is not None):               ## if object found
             object_name: str = object_regex.group(0)
+            logger.debug(f"Object found: {object_name}")
+            
             myObject = self.objects.get(object_name[2:-1])
 
             if myObject == None:
@@ -106,6 +113,7 @@ class ConfigHandler:
 
             object_regex = REGEX_OBJECT.search(query, 1)
         
+        logger.debug(f"Extended Query: {query}")
         return query
     
 
